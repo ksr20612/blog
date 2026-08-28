@@ -17,7 +17,7 @@
 	<div class="flex flex-col gap-4">
 		<p class="text-muted-foreground text-sm">{site.name}</p>
 		<h1 class="text-3xl font-medium tracking-tight sm:text-4xl">
-			사람을 중심에 두고 적어가는 기록
+			사람을 적는 기록
 		</h1>
 		<p class="text-muted-foreground text-base leading-7">
 			{site.description}

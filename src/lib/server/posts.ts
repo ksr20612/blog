@@ -33,6 +33,33 @@ const HIGHLIGHT_LANGS = [
 	"tsx",
 ] as const;
 
+const LANG_ALIASES: Record<string, (typeof HIGHLIGHT_LANGS)[number]> = {
+	ts: "typescript",
+	js: "javascript",
+	mjs: "javascript",
+	cjs: "javascript",
+	md: "markdown",
+	py: "python",
+	yml: "yaml",
+	sh: "bash",
+	shell: "bash",
+	zsh: "bash",
+};
+
+function resolveHighlightLang(lang: string | undefined) {
+	if (!lang) {
+		return "text";
+	}
+
+	const normalized = LANG_ALIASES[lang] ?? lang;
+
+	if ((HIGHLIGHT_LANGS as readonly string[]).includes(normalized)) {
+		return normalized;
+	}
+
+	return "text";
+}
+
 let highlighterPromise: Promise<Highlighter> | undefined;
 
 function getHighlighter() {
@@ -128,12 +155,8 @@ async function renderMarkdown(markdown: string) {
 		gfm: true,
 		renderer: {
 			code({ text, lang }) {
-				const language =
-					lang && (HIGHLIGHT_LANGS as readonly string[]).includes(lang)
-						? lang
-						: "text";
 				return highlighter.codeToHtml(text, {
-					lang: language,
+					lang: resolveHighlightLang(lang),
 					themes: {
 						light: "github-light",
 						dark: "github-dark",

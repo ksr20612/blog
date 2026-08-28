@@ -13,7 +13,7 @@
 <section class="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-16">
 	<div class="flex flex-col gap-2">
 		<h1 class="text-3xl font-medium tracking-tight">Posts</h1>
-		<p class="text-muted-foreground">태그를 눌러 글을 걸러볼 수 있습니다.</p>
+		<p class="text-muted-foreground">태그를 눌러 글을 걸러보세요.</p>
 	</div>
 	<PostList posts={data.posts} tags={data.tags} />
 </section>

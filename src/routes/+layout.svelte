@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ModeWatcher } from "mode-watcher";
-	import favicon from "$lib/assets/favicon.svg";
+	import favicon from "$lib/assets/favicon.ico";
 	import SiteFooter from "$lib/components/site-footer.svelte";
 	import SiteHeader from "$lib/components/site-header.svelte";
 	import { site } from "$lib/site";

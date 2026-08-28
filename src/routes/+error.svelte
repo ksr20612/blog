@@ -5,10 +5,10 @@
 	import * as Empty from "$lib/components/ui/empty/index.js";
 	import { site } from "$lib/site";
 
-	let title = $derived(page.status === 404 ? "페이지를 찾을 수 없습니다" : "문제가 발생했습니다");
+	let title = $derived(page.status === 404 ? "페이지를 찾을 수 없어요" : "문제가 발생했어요");
 	let description = $derived(
 		page.status === 404
-			? "주소가 바뀌었거나 글이 없을 수 있습니다."
+			? "주소가 바뀌었거나 글이 없어요."
 			: page.error?.message ?? "잠시 후 다시 시도해 주세요.",
 	);
 </script>

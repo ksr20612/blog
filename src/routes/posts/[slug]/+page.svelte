@@ -15,7 +15,7 @@
 	<meta name="description" content={post.description} />
 </svelte:head>
 
-<article class="mx-auto flex max-w-[68ch] flex-col gap-8 px-4 py-16">
+<article class="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-16">
 	<header class="flex flex-col gap-4">
 		<p class="text-muted-foreground text-sm">
 			<a href={resolve("/posts")} class="hover:text-foreground underline-offset-4 hover:underline">글</a>
