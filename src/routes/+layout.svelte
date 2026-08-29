@@ -11,6 +11,7 @@
 
 	onMount(async () => {
 		if (!import.meta.env.PROD) return;
+
 		const Clarity = (await import("@microsoft/clarity")).default;
 		Clarity.init(site.clarityProjectId);
 	});

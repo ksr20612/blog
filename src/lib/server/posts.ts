@@ -144,9 +144,17 @@ export function getPosts(): PostMeta[] {
 }
 
 export function getTags() {
-	return [...new Set(getPosts().flatMap((post) => post.tags))].sort((a, b) =>
-		a.localeCompare(b),
-	);
+	const counts = new Map<string, number>();
+
+	for (const post of getPosts()) {
+		for (const tag of post.tags) {
+			counts.set(tag, (counts.get(tag) ?? 0) + 1);
+		}
+	}
+
+	return [...counts.entries()]
+		.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+		.map(([tag]) => tag);
 }
 
 function slugifyHeading(text: string) {
