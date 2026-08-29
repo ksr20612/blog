@@ -4,6 +4,7 @@
 	import { Badge } from "$lib/components/ui/badge/index.js";
 	import * as Empty from "$lib/components/ui/empty/index.js";
 	import type { PostMeta } from "$lib/types";
+	import { cn } from "$lib/utils.js";
 	import PostCard from "./post-card.svelte";
 
 	let { posts, tags = [] }: { posts: PostMeta[]; tags?: string[] } = $props();
@@ -27,8 +28,11 @@
 	<div class="flex flex-wrap gap-2">
 		{#each tags as tag (tag)}
 			<Badge
-				variant={selectedTag === tag ? "default" : "outline"}
-				class="cursor-pointer"
+				variant="secondary"
+				class={cn(
+					"cursor-pointer",
+					selectedTag === tag && "bg-foreground text-background hover:bg-foreground/90",
+				)}
 				onclick={() => toggleTag(tag)}
 			>
 				{tag}

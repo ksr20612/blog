@@ -9,11 +9,11 @@
 </script>
 
 <a href={resolve("/posts/[slug]", { slug: post.slug })} class="block h-full">
-	<Card.Root class="h-full transition-all hover:ring-foreground/20">
-		<Card.Header>
+	<Card.Root class="h-full text-base ring-[#efeeeb] transition-all hover:ring-foreground/20">
+		<Card.Header class="gap-2.5">
 			<p class="text-muted-foreground text-xs">{formatDate(post.date)}</p>
-			<Card.Title>{post.title}</Card.Title>
-			<Card.Description>{post.description}</Card.Description>
+			<Card.Title class="text-foreground font-semibold leading-relaxed">{post.title}</Card.Title>
+			<Card.Description class="text-foreground/75 leading-relaxed">{post.description}</Card.Description>
 		</Card.Header>
 		{#if post.tags.length > 0}
 			<Card.Content>
