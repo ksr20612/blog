@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { resolve } from "$app/paths";
-	import RiMenuLine from "remixicon-svelte/icons/menu-line";
 	import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
 	import * as Sheet from "$lib/components/ui/sheet/index.js";
 	import { site } from "$lib/site";
+	import RiAccountCircleLine from "remixicon-svelte/icons/account-circle-line";
+	import RiGithubFill from "remixicon-svelte/icons/github-fill";
+	import RiMenuLine from "remixicon-svelte/icons/menu-line";
 	import ThemeToggle from "./theme-toggle.svelte";
 
 	let menuOpen = $state(false);
@@ -18,20 +20,52 @@
 	}
 </script>
 
+{#snippet profileLink()}
+	<Button
+		href={site.profile}
+		target="_blank"
+		rel="noreferrer"
+		variant="outline"
+		size="icon"
+		aria-label="프로필, 새 탭에서 열림"
+	>
+		<RiAccountCircleLine />
+	</Button>
+{/snippet}
+
+{#snippet githubLink()}
+	<Button
+		href={site.github}
+		target="_blank"
+		rel="noreferrer"
+		variant="outline"
+		size="icon"
+		aria-label="GitHub, 새 탭에서 열림"
+	>
+		<RiGithubFill />
+	</Button>
+{/snippet}
+
 <header class="border-b bg-background/80 sticky top-0 z-40 backdrop-blur">
 	<div class="mx-auto flex h-12 max-w-4xl items-center justify-between gap-4 px-4">
 		<a href={resolve("/")} class="font-medium tracking-tight">
 			{site.title}
 		</a>
 
-		<nav class="hidden items-center gap-1 md:flex">
-			{#each links as link (link.href)}
-				<Button variant="ghost" href={link.href}>{link.label}</Button>
-			{/each}
+		<div class="hidden items-center gap-1 md:flex">
+			<nav class="flex items-center gap-1">
+				{#each links as link (link.href)}
+					<Button variant="ghost" href={link.href}>{link.label}</Button>
+				{/each}
+			</nav>
+			{@render profileLink()}
+			{@render githubLink()}
 			<ThemeToggle />
-		</nav>
+		</div>
 
 		<div class="flex items-center gap-1 md:hidden">
+			{@render profileLink()}
+			{@render githubLink()}
 			<ThemeToggle />
 			<Sheet.Root bind:open={menuOpen}>
 				<Sheet.Trigger
