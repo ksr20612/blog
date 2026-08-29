@@ -2,6 +2,7 @@
 	import { resolve } from "$app/paths";
 	import { Badge } from "$lib/components/ui/badge/index.js";
 	import MarkdownBody from "$lib/components/markdown-body.svelte";
+	import PostPager from "$lib/components/post-pager.svelte";
 	import PostToc from "$lib/components/post-toc.svelte";
 	import { Separator } from "$lib/components/ui/separator/index.js";
 	import { formatDate } from "$lib/format";
@@ -42,6 +43,12 @@
 
 			<MarkdownBody html={post.html} />
 		</article>
+
+		{#if data.previous || data.next}
+			<div class="mt-10">
+				<PostPager previous={data.previous} next={data.next} />
+			</div>
+		{/if}
 
 		{#if post.toc.length > 0}
 			<aside class="absolute top-0 left-full ml-8 hidden h-full w-52 toc:block">

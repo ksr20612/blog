@@ -7,6 +7,8 @@ export type PostMeta = {
 	draft: boolean;
 };
 
+export type AdjacentPost = Pick<PostMeta, "slug" | "title">;
+
 export type TocItem = {
 	id: string;
 	text: string;

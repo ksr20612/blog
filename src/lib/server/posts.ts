@@ -1,7 +1,7 @@
 import grayMatter from "gray-matter";
 import { Marked } from "marked";
 import { createHighlighter, type Highlighter } from "shiki";
-import type { Post, PostMeta, TocItem } from "$lib/types";
+import type { AdjacentPost, Post, PostMeta, TocItem } from "$lib/types";
 
 type Frontmatter = {
 	title?: unknown;
@@ -141,6 +141,26 @@ export function getPosts(): PostMeta[] {
 		.map(({ meta }) => meta)
 		.filter((post) => !post.draft)
 		.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+}
+
+export function getAdjacentPosts(slug: string): {
+	previous: AdjacentPost | null;
+	next: AdjacentPost | null;
+} {
+	const posts = getPosts();
+	const index = posts.findIndex((post) => post.slug === slug);
+
+	if (index === -1) {
+		return { previous: null, next: null };
+	}
+
+	const toAdjacent = (post: PostMeta | undefined): AdjacentPost | null =>
+		post ? { slug: post.slug, title: post.title } : null;
+
+	return {
+		previous: toAdjacent(posts[index + 1]),
+		next: toAdjacent(posts[index - 1]),
+	};
 }
 
 export function getTags() {

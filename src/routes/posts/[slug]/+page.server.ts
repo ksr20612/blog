@@ -1,5 +1,5 @@
 import { error } from "@sveltejs/kit";
-import { getPost, getPosts } from "$lib/server/posts";
+import { getAdjacentPosts, getPost, getPosts } from "$lib/server/posts";
 import type { EntryGenerator, PageServerLoad } from "./$types";
 
 export const entries: EntryGenerator = () => {
@@ -13,5 +13,8 @@ export const load: PageServerLoad = async ({ params }) => {
     error(404, "글을 찾을 수 없어요.");
   }
 
-  return { post };
+  return {
+    post,
+    ...getAdjacentPosts(params.slug),
+  };
 };
