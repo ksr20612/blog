@@ -7,6 +7,13 @@ export type PostMeta = {
 	draft: boolean;
 };
 
+export type TocItem = {
+	id: string;
+	text: string;
+	depth: 2 | 3;
+};
+
 export type Post = PostMeta & {
 	html: string;
+	toc: TocItem[];
 };

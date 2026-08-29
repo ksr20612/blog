@@ -1,7 +1,7 @@
 import grayMatter from "gray-matter";
 import { Marked } from "marked";
 import { createHighlighter, type Highlighter } from "shiki";
-import type { Post, PostMeta } from "$lib/types";
+import type { Post, PostMeta, TocItem } from "$lib/types";
 
 type Frontmatter = {
 	title?: unknown;
@@ -149,8 +149,40 @@ export function getTags() {
 	);
 }
 
-async function renderMarkdown(markdown: string) {
+function slugifyHeading(text: string) {
+	const slug = text
+		.trim()
+		.toLowerCase()
+		.replace(/[^\p{Letter}\p{Number}\p{Mark}\s-]/gu, "")
+		.replace(/[\s_]+/g, "-")
+		.replace(/-+/g, "-")
+		.replace(/^-|-$/g, "");
+
+	return slug || "section";
+}
+
+function uniqueHeadingId(counts: Map<string, number>, text: string) {
+	const base = slugifyHeading(text);
+	const used = counts.get(base) ?? 0;
+	counts.set(base, used + 1);
+	return used === 0 ? base : `${base}-${used}`;
+}
+
+function escapeHtml(value: string) {
+	return value
+		.replaceAll("&", "&amp;")
+		.replaceAll("<", "&lt;")
+		.replaceAll(">", "&gt;")
+		.replaceAll('"', "&quot;");
+}
+
+async function renderMarkdown(markdown: string): Promise<{
+	html: string;
+	toc: TocItem[];
+}> {
 	const highlighter = await getHighlighter();
+	const toc: TocItem[] = [];
+	const usedIds = new Map<string, number>();
 	const marked = new Marked({
 		gfm: true,
 		renderer: {
@@ -164,10 +196,20 @@ async function renderMarkdown(markdown: string) {
 					defaultColor: false,
 				});
 			},
+			heading({ text, depth }) {
+				const id = uniqueHeadingId(usedIds, text);
+
+				if (depth === 2 || depth === 3) {
+					toc.push({ id, text, depth });
+				}
+
+				return `<h${depth} id="${escapeHtml(id)}">${escapeHtml(text)}</h${depth}>\n`;
+			},
 		},
 	});
 
-	return marked.parse(markdown) as string;
+	const html = await marked.parse(markdown);
+	return { html, toc };
 }
 
 export async function getPost(slug: string): Promise<Post | undefined> {
@@ -177,8 +219,11 @@ export async function getPost(slug: string): Promise<Post | undefined> {
 		return undefined;
 	}
 
+	const { html, toc } = await renderMarkdown(match.body);
+
 	return {
 		...match.meta,
-		html: await renderMarkdown(match.body),
+		html,
+		toc,
 	};
 }
