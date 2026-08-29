@@ -19,7 +19,7 @@
 </script>
 
 <header class="border-b bg-background/80 sticky top-0 z-40 backdrop-blur">
-	<div class="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-4">
+	<div class="mx-auto flex h-12 max-w-4xl items-center justify-between gap-4 px-4">
 		<a href={resolve("/")} class="font-medium tracking-tight">
 			{site.title}
 		</a>

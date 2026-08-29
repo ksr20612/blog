@@ -5,8 +5,8 @@
 
 	let { items }: { items: TocItem[] } = $props();
 
-	/** sticky header(h-14) + 여유 — layout.css scroll-margin-top과 맞춤 */
-	const TOP_OFFSET_PX = 80;
+	/** sticky header(h-12) + 여유 — layout.css scroll-margin-top과 맞춤 */
+	const TOP_OFFSET_PX = 72;
 	/** 하단 이 거리 안이면 마지막 섹션을 active로 본다 */
 	const BOTTOM_THRESHOLD_PX = 96;
 

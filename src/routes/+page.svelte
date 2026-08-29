@@ -13,10 +13,10 @@
 	<meta name="description" content={site.description} />
 </svelte:head>
 
-<section class="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-16">
+<section class="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-12">
 	<div class="flex flex-col gap-4">
 		<p class="text-muted-foreground text-sm">{site.name}</p>
-		<h1 class="text-3xl font-medium tracking-tight sm:text-4xl">
+		<h1 class="text-2xl font-medium tracking-tight sm:text-3xl">
 			사람을 적는 기록
 		</h1>
 		<p class="text-muted-foreground text-base leading-7">

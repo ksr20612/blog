@@ -77,7 +77,7 @@
 }
 
 @theme inline {
-  --breakpoint-toc: 94rem;
+  --breakpoint-toc: 86rem;
   --font-sans: "Pretendard Variable", Pretendard, "Roboto Variable", sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -147,7 +147,7 @@
 }
 
 .markdown-body :where(h2, h3) {
-  scroll-margin-top: 5rem;
+  scroll-margin-top: 4.5rem;
 }
 
 .markdown-body :where(pre.shiki) {

@@ -4,6 +4,6 @@
 	let { html }: { html: string } = $props();
 </script>
 
-<div class="markdown-body prose prose-neutral dark:prose-invert max-w-5xl" {@attach enhanceCodeBlocks}>
+<div class="markdown-body prose prose-neutral dark:prose-invert max-w-4xl" {@attach enhanceCodeBlocks}>
 	{@html html}
 </div>

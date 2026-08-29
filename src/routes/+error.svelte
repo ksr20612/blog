@@ -17,7 +17,7 @@
 	<title>{title} · {site.title}</title>
 </svelte:head>
 
-<section class="mx-auto flex max-w-5xl px-4 py-24">
+<section class="mx-auto flex max-w-4xl px-4 py-16">
 	<Empty.Root class="border">
 		<Empty.Header>
 			<Empty.Title>{title}</Empty.Title>
