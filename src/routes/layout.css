@@ -151,8 +151,9 @@
 }
 
 .markdown-body :where(pre.shiki) {
-  background-color: var(--shiki-light-bg);
+  background-color: var(--muted);
   color: var(--shiki-light);
+  border: 1px solid var(--border);
 }
 
 .markdown-body :where(pre.shiki span) {
