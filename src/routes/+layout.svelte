@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from "svelte";
 	import { ModeWatcher } from "mode-watcher";
 	import favicon from "$lib/assets/favicon.ico";
 	import SiteFooter from "$lib/components/site-footer.svelte";
@@ -7,6 +8,12 @@
 	import "./layout.css";
 
 	let { children } = $props();
+
+	onMount(async () => {
+		if (!import.meta.env.PROD) return;
+		const Clarity = (await import("@microsoft/clarity")).default;
+		Clarity.init(site.clarityProjectId);
+	});
 </script>
 
 <svelte:head>
