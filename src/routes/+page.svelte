@@ -3,6 +3,7 @@
 	import { Button } from "$lib/components/ui/button/index.js";
 	import { Separator } from "$lib/components/ui/separator/index.js";
 	import PostList from "$lib/components/post-list.svelte";
+	import PostSectionList from "$lib/components/post-section-list.svelte";
 	import { site } from "$lib/site";
 
 	let { data } = $props();
@@ -26,11 +27,20 @@
 
 	<Separator />
 
-	<div class="flex flex-col gap-6">
-		<div class="flex items-end justify-between gap-4">
-			<h2 class="text-xl font-medium tracking-tight">최근 글</h2>
-			<Button variant='ghost' color='secondary' href={resolve("/posts")}>전체 보기</Button>
+	<div class="flex flex-col gap-16">
+		<div class="flex flex-col gap-6">
+			<div class="flex items-end justify-between gap-4">
+				<h2 class="font-serif text-xl font-medium tracking-tight">최근 글</h2>
+				<Button variant='ghost' color='secondary' href={resolve("/posts")}>전체 보기</Button>
+			</div>
+			<PostList posts={data.posts} />
 		</div>
-		<PostList posts={data.posts} />
+
+		{#each data.sections as section (section.id)}
+			<div class="flex flex-col gap-6">
+				<h2 class="font-serif text-xl font-medium tracking-tight">{section.title}</h2>
+				<PostSectionList posts={section.posts} />
+			</div>
+		{/each}
 	</div>
 </section>

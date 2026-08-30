@@ -4,6 +4,7 @@ export type PostMeta = {
 	description: string;
 	date: string;
 	tags: string[];
+	sections: string[];
 	draft: boolean;
 };
 

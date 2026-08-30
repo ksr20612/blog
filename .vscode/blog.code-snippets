@@ -8,6 +8,7 @@
 			"description: \"$2\"",
 			"date: ${TM_FILENAME_BASE}",
 			"tags: [a11y, backend, css, design-system, javascript, nextjs, note, performance, react, testing, tooling, ux]",
+			"sections: [human, technical]",
 			"draft: false",
 			"---",
 			"",

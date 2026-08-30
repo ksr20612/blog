@@ -1,6 +1,7 @@
 import grayMatter from "gray-matter";
 import { Marked } from "marked";
 import { createHighlighter, type Highlighter } from "shiki";
+import { HOME_SECTION_POST_LIMIT } from "$lib/home-sections";
 import type { AdjacentPost, Post, PostMeta, TocItem } from "$lib/types";
 
 type Frontmatter = {
@@ -8,6 +9,7 @@ type Frontmatter = {
 	description?: unknown;
 	date?: unknown;
 	tags?: unknown;
+	sections?: unknown;
 	draft?: unknown;
 };
 
@@ -128,6 +130,7 @@ function parseMeta(
 			description: asString(data.description),
 			date,
 			tags: asStringArray(data.tags),
+			sections: asStringArray(data.sections),
 			draft: data.draft === true,
 		},
 		body: content,
@@ -141,6 +144,23 @@ export function getPosts(): PostMeta[] {
 		.map(({ meta }) => meta)
 		.filter((post) => !post.draft)
 		.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+}
+
+export function getSectionPosts(
+	sectionId: string,
+	options: {
+		limit?: number;
+		excludeSlugs?: readonly string[];
+	} = {},
+): PostMeta[] {
+	const limit = options.limit ?? HOME_SECTION_POST_LIMIT;
+	const excluded = new Set(options.excludeSlugs);
+
+	return getPosts()
+		.filter(
+			(post) => post.sections.includes(sectionId) && !excluded.has(post.slug),
+		)
+		.slice(0, limit);
 }
 
 export function getAdjacentPosts(slug: string): {
