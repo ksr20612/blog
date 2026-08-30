@@ -3,6 +3,7 @@
 	import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
 	import * as Sheet from "$lib/components/ui/sheet/index.js";
 	import { site } from "$lib/site";
+	import { cn } from "$lib/utils.js";
 	import RiAccountCircleLine from "remixicon-svelte/icons/account-circle-line";
 	import RiGithubFill from "remixicon-svelte/icons/github-fill";
 	import RiMenuLine from "remixicon-svelte/icons/menu-line";
@@ -18,6 +19,9 @@
 	function closeMenu() {
 		menuOpen = false;
 	}
+
+	const iconButtonClass =
+		"bg-card ring-1 ring-[#efeeeb] hover:bg-card hover:ring-foreground/20 dark:ring-foreground/10 dark:hover:bg-card";
 </script>
 
 {#snippet profileLink()}
@@ -27,6 +31,7 @@
 		rel="noreferrer"
 		variant="outline"
 		size="icon"
+		class={iconButtonClass}
 		aria-label="프로필, 새 탭에서 열림"
 	>
 		<RiAccountCircleLine />
@@ -40,6 +45,7 @@
 		rel="noreferrer"
 		variant="outline"
 		size="icon"
+		class={iconButtonClass}
 		aria-label="GitHub, 새 탭에서 열림"
 	>
 		<RiGithubFill />
@@ -60,16 +66,16 @@
 			</nav>
 			{@render profileLink()}
 			{@render githubLink()}
-			<ThemeToggle />
+			<ThemeToggle class={iconButtonClass} />
 		</div>
 
 		<div class="flex items-center gap-1 md:hidden">
 			{@render profileLink()}
 			{@render githubLink()}
-			<ThemeToggle />
+			<ThemeToggle class={iconButtonClass} />
 			<Sheet.Root bind:open={menuOpen}>
 				<Sheet.Trigger
-					class={buttonVariants({ variant: "outline", size: "icon" })}
+					class={cn(buttonVariants({ variant: "outline", size: "icon" }), iconButtonClass)}
 					aria-label="메뉴 열기"
 				>
 					<RiMenuLine />
