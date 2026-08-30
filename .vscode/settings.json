@@ -1,5 +1,15 @@
 {
 	"files.associations": {
 		"*.css": "tailwindcss"
+	},
+	"editor.snippetSuggestions": "top",
+	"editor.suggest.showSnippets": true,
+	"editor.tabCompletion": "on",
+	"[markdown]": {
+		"editor.quickSuggestions": {
+			"other": true,
+			"comments": true,
+			"strings": true
+		}
 	}
 }

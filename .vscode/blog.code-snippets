@@ -1,0 +1,18 @@
+{
+	"Blog Post Frontmatter": {
+		"scope": "markdown",
+		"prefix": "post",
+		"body": [
+			"---",
+			"title: \"$1\"",
+			"description: \"$2\"",
+			"date: ${TM_FILENAME_BASE}",
+			"tags: [a11y, backend, css, design-system, javascript, nextjs, note, performance, react, testing, tooling, ux]",
+			"draft: false",
+			"---",
+			"",
+			"$0"
+		],
+		"description": "블로그 글 frontmatter"
+	}
+}
