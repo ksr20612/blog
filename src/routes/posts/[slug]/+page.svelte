@@ -45,7 +45,8 @@
 		</article>
 
 		{#if data.previous || data.next}
-			<div class="mt-10">
+			<div class="mt-10 flex flex-col gap-6">
+				<Separator />
 				<PostPager previous={data.previous} next={data.next} />
 			</div>
 		{/if}
