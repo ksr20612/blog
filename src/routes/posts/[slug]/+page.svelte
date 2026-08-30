@@ -26,9 +26,9 @@
 					<span aria-hidden="true">/</span>
 					<time datetime={post.date}>{formatDate(post.date)}</time>
 				</p>
-				<h1 class="text-2xl font-medium tracking-tight sm:text-3xl">{post.title}</h1>
+				<h1 class="font-serif text-2xl font-semibold tracking-normal sm:text-3xl">{post.title}</h1>
 				{#if post.description}
-					<p class="text-muted-foreground text-base leading-7">{post.description}</p>
+					<p class="font-serif text-muted-foreground text-base leading-7">{post.description}</p>
 				{/if}
 				{#if post.tags.length > 0}
 					<div class="flex flex-wrap gap-1.5">
