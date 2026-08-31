@@ -16,89 +16,89 @@ const ICON_SIZE = 14;
 const ICON_GAP = 6;
 
 function escapeXml(value: string) {
-	return value
-		.replaceAll("&", "&amp;")
-		.replaceAll("<", "&lt;")
-		.replaceAll(">", "&gt;")
-		.replaceAll('"', "&quot;")
-		.replaceAll("'", "&apos;");
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
 }
 
 function charWidth(char: string, fontSize: number) {
-	const code = char.codePointAt(0) ?? 0;
+  const code = char.codePointAt(0) ?? 0;
 
-	if (code > 0x2e80) {
-		return fontSize * 0.95;
-	}
+  if (code > 0x2e80) {
+    return fontSize * 0.95;
+  }
 
-	return fontSize * 0.56;
+  return fontSize * 0.56;
 }
 
 function estimateWidth(text: string, fontSize: number) {
-	let width = 0;
+  let width = 0;
 
-	for (const char of text) {
-		width += charWidth(char, fontSize);
-	}
+  for (const char of text) {
+    width += charWidth(char, fontSize);
+  }
 
-	return width;
+  return width;
 }
 
 function truncateToWidth(text: string, fontSize: number, maxWidth: number) {
-	if (estimateWidth(text, fontSize) <= maxWidth) {
-		return text;
-	}
+  if (estimateWidth(text, fontSize) <= maxWidth) {
+    return text;
+  }
 
-	const ellipsis = "…";
-	const ellipsisWidth = estimateWidth(ellipsis, fontSize);
-	let result = "";
+  const ellipsis = "…";
+  const ellipsisWidth = estimateWidth(ellipsis, fontSize);
+  let result = "";
 
-	for (const char of text) {
-		const next = result + char;
+  for (const char of text) {
+    const next = result + char;
 
-		if (estimateWidth(next, fontSize) + ellipsisWidth > maxWidth) {
-			return `${result}${ellipsis}`;
-		}
+    if (estimateWidth(next, fontSize) + ellipsisWidth > maxWidth) {
+      return `${result}${ellipsis}`;
+    }
 
-		result = next;
-	}
+    result = next;
+  }
 
-	return result;
+  return result;
 }
 
 export function renderRecentPostsSvg(input: {
-	title: string;
-	posts: RecentPost[];
+  title: string;
+  posts: RecentPost[];
 }) {
-	const posts = input.posts.slice(0, RECENT_POSTS_CARD_COUNT);
-	const bodyHeight =
-		posts.length === 0 ? ROW_HEIGHT : posts.length * ROW_HEIGHT;
-	const height =
-		PADDING_Y + HEADER_HEIGHT + DIVIDER_GAP + bodyHeight + PADDING_Y;
-	const titleMaxWidth = WIDTH - PADDING_X * 2;
-	const dividerY = PADDING_Y + HEADER_HEIGHT;
-	const description =
-		posts.length === 0
-			? "아직 글이 없습니다."
-			: posts.map((post) => post.title).join(". ");
+  const posts = input.posts.slice(0, RECENT_POSTS_CARD_COUNT);
+  const bodyHeight =
+    posts.length === 0 ? ROW_HEIGHT : posts.length * ROW_HEIGHT;
+  const height =
+    PADDING_Y + HEADER_HEIGHT + DIVIDER_GAP + bodyHeight + PADDING_Y;
+  const titleMaxWidth = WIDTH - PADDING_X * 2;
+  const dividerY = PADDING_Y + HEADER_HEIGHT;
+  const description =
+    posts.length === 0
+      ? "아직 글이 없어요."
+      : posts.map((post) => post.title).join(". ");
 
-	const rows =
-		posts.length === 0
-			? `<text class="label" x="${PADDING_X}" y="${dividerY + DIVIDER_GAP + 18}" font-size="12">아직 글이 없습니다</text>`
-			: posts
-					.map((post, index) => {
-						const y = dividerY + DIVIDER_GAP + 18 + index * ROW_HEIGHT;
-						const title = truncateToWidth(
-							post.title,
-							TITLE_FONT_SIZE,
-							titleMaxWidth,
-						);
+  const rows =
+    posts.length === 0
+      ? `<text class="label" x="${PADDING_X}" y="${dividerY + DIVIDER_GAP + 18}" font-size="12">아직 글이 없어요.</text>`
+      : posts
+          .map((post, index) => {
+            const y = dividerY + DIVIDER_GAP + 18 + index * ROW_HEIGHT;
+            const title = truncateToWidth(
+              post.title,
+              TITLE_FONT_SIZE,
+              titleMaxWidth,
+            );
 
-						return `<text class="post-title" x="${PADDING_X}" y="${y}" font-size="${TITLE_FONT_SIZE}">${escapeXml(title)}</text>`;
-					})
-					.join("\n");
+            return `<text class="post-title" x="${PADDING_X}" y="${y}" font-size="${TITLE_FONT_SIZE}">${escapeXml(title)}</text>`;
+          })
+          .join("\n");
 
-	return `<?xml version="1.0" encoding="UTF-8"?>
+  return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${height}" viewBox="0 0 ${WIDTH} ${height}" role="img" aria-labelledby="svg-title svg-desc">
   <title id="svg-title">${escapeXml(input.title)} 최근 글</title>
   <desc id="svg-desc">${escapeXml(description)}</desc>

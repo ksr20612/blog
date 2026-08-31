@@ -20,3 +20,19 @@ export type Post = PostMeta & {
 	html: string;
 	toc: TocItem[];
 };
+
+export type TreadImage = {
+	src: string;
+	alt: string;
+};
+
+export type TreadMeta = {
+	slug: string;
+	date: string;
+	draft: boolean;
+	images: TreadImage[];
+};
+
+export type Tread = TreadMeta & {
+	html: string;
+};

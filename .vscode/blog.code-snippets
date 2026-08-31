@@ -15,5 +15,21 @@
 			"$0"
 		],
 		"description": "블로그 글 frontmatter"
+	},
+	"Tread Frontmatter": {
+		"scope": "markdown",
+		"prefix": "tread",
+		"body": [
+			"---",
+			"date: ${TM_FILENAME_BASE}",
+			"draft: false",
+			"images:",
+			"  - src: /imgs/treads/${TM_FILENAME_BASE}/$1.webp",
+			"    alt: $2",
+			"---",
+			"",
+			"$0"
+		],
+		"description": "Tread frontmatter"
 	}
 }

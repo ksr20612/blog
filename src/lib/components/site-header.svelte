@@ -14,6 +14,7 @@
 	const links = [
 		{ href: resolve("/"), label: "Home" },
 		{ href: resolve("/posts"), label: "Posts" },
+		{ href: resolve("/treads"), label: "Treads" },
 	];
 
 	function closeMenu() {

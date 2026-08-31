@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="어두운 배경 위에 짧은 글 카드가 놓인 타임라인 스케치">
+  <title>어두운 배경 위에 짧은 글 카드가 놓인 타임라인 스케치</title>
+  <rect width="1200" height="800" fill="#26251e"/>
+  <rect x="80" y="80" width="1040" height="640" rx="28" fill="#1a1914"/>
+  <circle cx="200" cy="200" r="36" fill="#f7f7f4"/>
+  <rect x="260" y="178" width="280" height="18" rx="6" fill="#f7f7f4"/>
+  <rect x="260" y="208" width="180" height="12" rx="5" fill="#8a887e"/>
+  <rect x="140" y="280" width="920" height="360" rx="20" fill="#3a3932"/>
+</svg>

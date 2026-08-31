@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="밝은 배경 위에 글과 이미지 블록이 놓인 타임라인 스케치">
+  <title>밝은 배경 위에 글과 이미지 블록이 놓인 타임라인 스케치</title>
+  <rect width="1200" height="800" fill="#ebebe8"/>
+  <rect x="80" y="80" width="1040" height="640" rx="28" fill="#f7f7f4"/>
+  <rect x="140" y="160" width="420" height="28" rx="8" fill="#26251e"/>
+  <rect x="140" y="220" width="720" height="16" rx="6" fill="#8a887e"/>
+  <rect x="140" y="252" width="640" height="16" rx="6" fill="#8a887e"/>
+  <rect x="140" y="340" width="920" height="360" rx="20" fill="#d9d8d1"/>
+</svg>

@@ -47,12 +47,12 @@
 			<Empty.Media variant="icon">
 				<RiFileTextLine />
 			</Empty.Media>
-			<Empty.Title>글이 없습니다</Empty.Title>
+			<Empty.Title>글이 없습니다.</Empty.Title>
 			<Empty.Description>
 				{#if selectedTag}
-					선택한 태그에 해당하는 글이 없습니다.
+					선택한 태그에 해당하는 글이 없어요.
 				{:else}
-					<code>content/posts</code>에 Markdown 파일을 추가하세요.
+					공개된 글이 아직 없어요.
 				{/if}
 			</Empty.Description>
 		</Empty.Header>
