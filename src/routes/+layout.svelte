@@ -4,6 +4,7 @@
 	import favicon from "$lib/assets/favicon.ico";
 	import SiteFooter from "$lib/components/site-footer.svelte";
 	import SiteHeader from "$lib/components/site-header.svelte";
+	import { fontPreloads } from "$lib/font-preloads";
 	import { site } from "$lib/site";
 	import "./layout.css";
 
@@ -18,6 +19,9 @@
 </script>
 
 <svelte:head>
+	{#each fontPreloads as href (href)}
+		<link rel="preload" as="font" type="font/woff2" {href} crossorigin="anonymous" />
+	{/each}
 	<link rel="icon" href={favicon} />
 	<title>{site.title}</title>
 	<meta name="description" content={site.description} />
