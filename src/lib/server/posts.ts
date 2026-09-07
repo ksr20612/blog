@@ -1,3 +1,4 @@
+import { base } from "$app/paths";
 import grayMatter from "gray-matter";
 import { Marked } from "marked";
 import { createHighlighter, type Highlighter } from "shiki";
@@ -224,6 +225,14 @@ function escapeHtml(value: string) {
 		.replaceAll('"', "&quot;");
 }
 
+function resolveLocalUrl(href: string) {
+	if (!href.startsWith("/") || href.startsWith("//")) {
+		return href;
+	}
+
+	return `${base}${href}`;
+}
+
 async function renderMarkdown(markdown: string): Promise<{
 	html: string;
 	toc: TocItem[];
@@ -252,6 +261,12 @@ async function renderMarkdown(markdown: string): Promise<{
 				}
 
 				return `<h${depth} id="${escapeHtml(id)}">${escapeHtml(text)}</h${depth}>\n`;
+			},
+			image({ href, title, text }) {
+				const src = resolveLocalUrl(href);
+				const titleAttr = title ? ` title="${escapeHtml(title)}"` : "";
+
+				return `<img src="${escapeHtml(src)}" alt="${escapeHtml(text)}"${titleAttr}>`;
 			},
 		},
 	});
