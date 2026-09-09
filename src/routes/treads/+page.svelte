@@ -1,6 +1,7 @@
 <script lang="ts">
 	import RiChat3Line from "remixicon-svelte/icons/chat-3-line";
 	import TreadCard from "$lib/components/tread-card.svelte";
+	import TreadThread from "$lib/components/tread-thread.svelte";
 	import * as Empty from "$lib/components/ui/empty/index.js";
 	import { site } from "$lib/site";
 
@@ -27,12 +28,12 @@
 			</Empty.Header>
 		</Empty.Root>
 	{:else}
-		<ul class="flex flex-col gap-6">
+		<TreadThread count={data.treads.length}>
 			{#each data.treads as tread (tread.slug)}
-				<li>
+				<li class="tread-item relative z-10 hover:z-20">
 					<TreadCard {tread} />
 				</li>
 			{/each}
-		</ul>
+		</TreadThread>
 	{/if}
 </section>
