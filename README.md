@@ -1,7 +1,9 @@
-# dongyeon.log
 
-<div align="center">
-<a href="https://ksr20612.github.io/blog" aria-label="tech blog posts"><img width="450" alt="tech blog home" src="https://github.com/user-attachments/assets/7ebef351-537a-473c-a0c3-cd8d8fecd18c" /></a>
+
+<div align="center"> 
+
+  # Dongyeon.log
+
 </div>
 
 <div align="center">
