@@ -210,3 +210,106 @@
 .code-copy:hover {
   color: var(--foreground);
 }
+
+.markdown-figure {
+  margin-block: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.markdown-figure-media {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.markdown-figure-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.markdown-figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+
+.markdown-figure figcaption {
+  max-width: 40rem;
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.markdown-figure-note {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+}
+
+.markdown-figure a,
+.markdown-table-wrap a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.markdown-figure code,
+.markdown-table-wrap code {
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  border-radius: calc(var(--radius) * 0.5);
+  background: var(--muted);
+}
+
+.markdown-table-wrap {
+  margin-block: 1.75em;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+
+.markdown-table-wrap table {
+  width: 100%;
+  min-width: max-content;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.markdown-table-wrap th,
+.markdown-table-wrap td {
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.markdown-table-wrap thead th {
+  background: var(--muted);
+  color: var(--foreground);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.markdown-table-wrap tbody tr:last-child td {
+  border-bottom: none;
+}
