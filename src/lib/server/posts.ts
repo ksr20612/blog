@@ -1,9 +1,10 @@
-import { base } from "$app/paths";
 import grayMatter from "gray-matter";
 import { Marked } from "marked";
 import { createHighlighter, type Highlighter } from "shiki";
+import { base } from "$app/paths";
 import { HOME_SECTION_POST_LIMIT } from "$lib/home-sections";
 import type { AdjacentPost, Post, PostMeta, TocItem } from "$lib/types";
+import { renderMarkdownTable } from "./markdown-tables";
 
 type Frontmatter = {
 	title?: unknown;
@@ -268,6 +269,7 @@ async function renderMarkdown(markdown: string): Promise<{
 
 				return `<img src="${escapeHtml(src)}" alt="${escapeHtml(text)}"${titleAttr}>`;
 			},
+			table: renderMarkdownTable,
 		},
 	});
 

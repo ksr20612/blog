@@ -115,7 +115,7 @@
 							"-ml-px block border-l py-1 text-sm leading-5 transition-colors",
 							item.depth === 3 ? "pl-6" : "pl-3",
 							activeId === item.id
-								? "border-foreground text-foreground font-medium"
+								? "border-primary text-foreground font-medium"
 								: "text-muted-foreground hover:text-foreground border-transparent",
 						)}
 					>
