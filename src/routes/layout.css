@@ -150,6 +150,16 @@
   html {
     @apply font-sans;
   }
+
+  ::selection {
+    color: inherit;
+    background: color-mix(in oklab, var(--primary) 22%, transparent);
+  }
+
+  :where(pre, code)::selection,
+  :where(pre, code) *::selection {
+    background: color-mix(in oklab, var(--primary) 14%, transparent);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -165,6 +175,16 @@
 .markdown-body {
   font-size: 1.0625rem;
   line-height: 1.8;
+}
+
+.markdown-body a {
+  color: var(--primary);
+  text-decoration-color: color-mix(in oklab, var(--primary) 40%, transparent);
+  text-underline-offset: 0.18em;
+}
+
+.markdown-body a:hover {
+  text-decoration-color: var(--primary);
 }
 
 .markdown-body :where(h2, h3) {

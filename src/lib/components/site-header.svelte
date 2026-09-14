@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from "$app/paths";
+	import { page } from "$app/state";
 	import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
 	import * as Sheet from "$lib/components/ui/sheet/index.js";
 	import { site } from "$lib/site";
@@ -12,10 +13,27 @@
 	let menuOpen = $state(false);
 
 	const links = [
-		{ href: resolve("/"), label: "Home" },
-		{ href: resolve("/posts"), label: "Posts" },
-		{ href: resolve("/treads"), label: "Treads" },
-	];
+		{ href: resolve("/"), label: "Home", route: "/" },
+		{ href: resolve("/posts"), label: "Posts", route: "/posts" },
+		{ href: resolve("/treads"), label: "Treads", route: "/treads" },
+	] as const;
+
+	const titleDot = site.title.lastIndexOf(".");
+	const titleHead = titleDot === -1 ? site.title : site.title.slice(0, titleDot);
+	const titleTail = titleDot === -1 ? "" : site.title.slice(titleDot + 1);
+
+	function isCurrent(route: string) {
+		const id = page.route.id;
+		if (!id) {
+			return false;
+		}
+
+		if (route === "/") {
+			return id === "/";
+		}
+
+		return id === route || id.startsWith(`${route}/`);
+	}
 
 	function closeMenu() {
 		menuOpen = false;
@@ -56,13 +74,21 @@
 <header class="border-b bg-background/80 sticky top-0 z-40 backdrop-blur">
 	<div class="mx-auto flex h-12 max-w-4xl items-center justify-between gap-4 px-4">
 		<a href={resolve("/")} class="font-medium tracking-tight">
-			{site.title}
+			{titleHead}<span class="text-primary">.</span>{titleTail}
 		</a>
 
 		<div class="hidden items-center gap-1 md:flex">
 			<nav class="flex items-center gap-1">
 				{#each links as link (link.href)}
-					<Button variant="ghost" href={link.href}>{link.label}</Button>
+					{@const current = isCurrent(link.route)}
+					<Button
+						variant="ghost"
+						href={link.href}
+						aria-current={current ? "page" : undefined}
+						class={current ? "text-primary hover:text-primary" : undefined}
+					>
+						{link.label}
+					</Button>
 				{/each}
 			</nav>
 			{@render profileLink()}
@@ -83,12 +109,21 @@
 				</Sheet.Trigger>
 				<Sheet.Content side="right" class="w-72">
 					<Sheet.Header>
-						<Sheet.Title>{site.title}</Sheet.Title>
+						<Sheet.Title>
+							{titleHead}<span class="text-primary">.</span>{titleTail}
+						</Sheet.Title>
 						<Sheet.Description>페이지로 이동</Sheet.Description>
 					</Sheet.Header>
 					<nav class="flex flex-col gap-1 px-4">
 						{#each links as link (link.href)}
-							<Button variant="ghost" class="justify-start" href={link.href} onclick={closeMenu}>
+							{@const current = isCurrent(link.route)}
+							<Button
+								variant="ghost"
+								class={cn("justify-start", current && "text-primary hover:text-primary")}
+								href={link.href}
+								aria-current={current ? "page" : undefined}
+								onclick={closeMenu}
+							>
 								{link.label}
 							</Button>
 						{/each}
