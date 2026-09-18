@@ -2,6 +2,7 @@
 	import { onMount } from "svelte";
 	import { ModeWatcher } from "mode-watcher";
 	import favicon from "$lib/assets/favicon.ico";
+	import SeoHead from "$lib/components/seo-head.svelte";
 	import SiteFooter from "$lib/components/site-footer.svelte";
 	import SiteHeader from "$lib/components/site-header.svelte";
 	import { fontPreloads } from "$lib/font-preloads";
@@ -23,9 +24,9 @@
 		<link rel="preload" as="font" type="font/woff2" {href} crossorigin="anonymous" />
 	{/each}
 	<link rel="icon" href={favicon} />
-	<title>{site.title}</title>
-	<meta name="description" content={site.description} />
 </svelte:head>
+
+<SeoHead />
 
 <ModeWatcher defaultMode="dark" />
 

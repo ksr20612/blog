@@ -139,7 +139,14 @@ function parseMeta(
 	};
 }
 
-const parsed = Object.entries(files).map(([path, raw]) => parseMeta(path, raw));
+const parsed = Object.entries(files).map(([path, raw]) => ({
+	...parseMeta(path, raw),
+	raw,
+}));
+
+export function getPostSource(slug: string) {
+	return parsed.find(({ meta }) => meta.slug === slug && !meta.draft)?.raw;
+}
 
 export function getPosts(): PostMeta[] {
 	return parsed

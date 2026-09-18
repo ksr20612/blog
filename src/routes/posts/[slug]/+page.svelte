@@ -6,16 +6,10 @@
 	import PostToc from "$lib/components/post-toc.svelte";
 	import { Separator } from "$lib/components/ui/separator/index.js";
 	import { formatDate } from "$lib/format";
-	import { site } from "$lib/site";
 
 	let { data } = $props();
 	let post = $derived(data.post);
 </script>
-
-<svelte:head>
-	<title>{post.title} · {site.title}</title>
-	<meta name="description" content={post.description} />
-</svelte:head>
 
 <div class="mx-auto max-w-4xl px-4 py-12">
 	<div class="relative">
