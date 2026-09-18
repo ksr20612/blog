@@ -17,11 +17,6 @@
 	}
 </script>
 
-<svelte:head>
-	<title>{site.title}</title>
-	<meta name="description" content={site.description} />
-</svelte:head>
-
 <section class="mx-auto flex max-w-4xl flex-col gap-8 px-8 py-12">
 	<div class="flex flex-col gap-2">
 		<h1 class="font-serif text-2xl font-semibold tracking-normal sm:text-3xl">
