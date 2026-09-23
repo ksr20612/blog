@@ -125,6 +125,7 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-selection: color-mix(in oklab, var(--primary) 22%, transparent);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -153,7 +154,7 @@
 
   ::selection {
     color: inherit;
-    background: color-mix(in oklab, var(--primary) 22%, transparent);
+    background: var(--color-selection);
   }
 
   :where(pre, code)::selection,
