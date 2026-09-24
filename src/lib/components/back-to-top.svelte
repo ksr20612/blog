@@ -25,18 +25,20 @@
 
 {#if visible}
 	<div
-		class="fixed z-50 right-[max(1rem,env(safe-area-inset-right))] bottom-[max(1rem,env(safe-area-inset-bottom))]"
+		class="pointer-events-none fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-4xl justify-end px-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
 		transition:fade={{ duration: prefersReducedMotion.current ? 0 : 160 }}
 	>
-		<Button
-			type="button"
-			variant="outline"
-			size="icon-lg"
-			class="bg-background/80 text-foreground size-10 rounded-full shadow-lg shadow-foreground/12 ring-1 ring-foreground/15 backdrop-blur hover:bg-background/90 hover:ring-foreground/30 dark:bg-background/80 dark:ring-foreground/25 dark:hover:bg-background/90 dark:hover:ring-foreground/40 [&_svg]:size-5"
-			aria-label="맨 위로 이동"
-			onclick={scrollToTop}
-		>
-			<RiArrowUpLine aria-hidden="true" />
-		</Button>
+		<div class="pointer-events-auto">
+			<Button
+				type="button"
+				variant="outline"
+				size="icon-lg"
+				class="bg-background/80 text-foreground size-10 rounded-full shadow-lg shadow-foreground/12 ring-1 ring-foreground/15 backdrop-blur hover:bg-background/90 hover:ring-foreground/30 dark:bg-background/80 dark:ring-foreground/25 dark:hover:bg-background/90 dark:hover:ring-foreground/40 [&_svg]:size-5"
+				aria-label="맨 위로 이동"
+				onclick={scrollToTop}
+			>
+				<RiArrowUpLine aria-hidden="true" />
+			</Button>
+		</div>
 	</div>
 {/if}
