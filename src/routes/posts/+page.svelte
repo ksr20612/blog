@@ -6,7 +6,7 @@
 </script>
 
 <section class="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-12">
-	<PostList posts={data.posts} tags={data.tags}>
+	<PostList posts={data.posts} tags={data.tags} searchable>
 		{#snippet heading()}
 			<h1 id="posts-heading" tabindex="-1" class="text-2xl font-medium tracking-tight">
 				Posts

@@ -8,6 +8,10 @@ export type PostMeta = {
 	draft: boolean;
 };
 
+export type SearchablePost = PostMeta & {
+	text: string;
+};
+
 export type AdjacentPost = Pick<PostMeta, "slug" | "title">;
 
 export type TocItem = {
