@@ -3,9 +3,10 @@
 	import { Badge } from "$lib/components/ui/badge/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
 	import { formatDate } from "$lib/format";
+	import type { SearchSnippet } from "$lib/search";
 	import type { PostMeta } from "$lib/types";
 
-	let { post }: { post: PostMeta } = $props();
+	let { post, snippet = null }: { post: PostMeta; snippet?: SearchSnippet | null } = $props();
 </script>
 
 <a href={resolve("/posts/[slug]", { slug: post.slug })} class="block h-full">
@@ -14,6 +15,11 @@
 			<p class="text-muted-foreground text-xs">{formatDate(post.date)}</p>
 			<Card.Title class="text-foreground font-semibold leading-relaxed">{post.title}</Card.Title>
 			<Card.Description class="text-foreground/75 leading-relaxed">{post.description}</Card.Description>
+			{#if snippet}
+				<p class="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
+					{snippet.before}<mark class="bg-selection text-foreground rounded-sm">{snippet.match}</mark>{snippet.after}
+				</p>
+			{/if}
 		</Card.Header>
 		{#if post.tags.length > 0}
 			<Card.Content>

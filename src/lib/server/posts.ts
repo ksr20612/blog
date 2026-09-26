@@ -3,7 +3,14 @@ import { Marked } from "marked";
 import { createHighlighter, type Highlighter } from "shiki";
 import { base } from "$app/paths";
 import { HOME_SECTION_POST_LIMIT } from "$lib/home-sections";
-import type { AdjacentPost, Post, PostMeta, TocItem } from "$lib/types";
+import { toSearchText } from "$lib/search";
+import type {
+	AdjacentPost,
+	Post,
+	PostMeta,
+	SearchablePost,
+	TocItem,
+} from "$lib/types";
 import { renderMarkdownTable } from "./markdown-tables";
 
 type Frontmatter = {
@@ -148,11 +155,25 @@ export function getPostSource(slug: string) {
 	return parsed.find(({ meta }) => meta.slug === slug && !meta.draft)?.raw;
 }
 
+function byDateDesc(a: { date: string }, b: { date: string }) {
+	return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
+}
+
 export function getPosts(): PostMeta[] {
 	return parsed
 		.map(({ meta }) => meta)
 		.filter((post) => !post.draft)
-		.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+		.sort(byDateDesc);
+}
+
+export function getSearchablePosts(): SearchablePost[] {
+	return parsed
+		.filter(({ meta }) => !meta.draft)
+		.map(({ meta, body }) => ({
+			...meta,
+			text: toSearchText(body),
+		}))
+		.sort(byDateDesc);
 }
 
 export function getSectionPosts(
