@@ -16,6 +16,34 @@
 	let innerHeight = $state(0);
 	let visible = $derived(innerHeight > 0 && scrollY > innerHeight * 0.3);
 
+	function cubicBezier(x1: number, y1: number, x2: number, y2: number) {
+		const sample = (t: number, a1: number, a2: number) => {
+			const a = 1 - 3 * a2 + 3 * a1;
+			const b = 3 * a2 - 6 * a1;
+			return ((a * t + b) * t + 3 * a1) * t;
+		};
+		const slope = (t: number) => {
+			const a = 3 * (1 - 3 * x2 + 3 * x1);
+			const b = 2 * (3 * x2 - 6 * x1);
+			return (a * t + b) * t + 3 * x1;
+		};
+		const solve = (x: number) => {
+			let t = x;
+			for (let i = 0; i < 8; i += 1) {
+				const currentSlope = slope(t);
+				if (Math.abs(currentSlope) < 1e-6) break;
+				const error = sample(t, x1, x2) - x;
+				if (Math.abs(error) < 1e-6) return t;
+				t -= error / currentSlope;
+			}
+			return t;
+		};
+
+		return (x: number) => sample(solve(x), y1, y2);
+	}
+
+	const listRevealEasing = cubicBezier(0.22, 1, 0.36, 1);
+
 	function scrollToTop() {
 		window.scrollTo({
 			top: 0,
@@ -29,31 +57,31 @@
 
 <svelte:window bind:scrollY bind:innerHeight />
 
-{#if visible || children}
-	<div
-		class="pointer-events-none fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-4xl flex-col items-end gap-2 px-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
-	>
-		{#if visible}
-			<div
-				class="pointer-events-auto"
-				transition:fly={{ y: 8, duration: prefersReducedMotion.current ? 0 : 160 }}
+<div
+	class="pointer-events-none fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-4xl flex-col items-end gap-2 px-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
+>
+	{#if visible}
+		<div
+			class="pointer-events-auto"
+			transition:fly={children
+				? { y: 8, duration: prefersReducedMotion.current ? 0 : 160 }
+				: { y: 16, duration: prefersReducedMotion.current ? 0 : 320, easing: listRevealEasing }}
+		>
+			<Button
+				type="button"
+				variant="outline"
+				size="icon-lg"
+				class={floatingActionButtonClass}
+				aria-label="맨 위로 이동"
+				onclick={scrollToTop}
 			>
-				<Button
-					type="button"
-					variant="outline"
-					size="icon-lg"
-					class={floatingActionButtonClass}
-					aria-label="맨 위로 이동"
-					onclick={scrollToTop}
-				>
-					<RiArrowUpLine aria-hidden="true" />
-				</Button>
-			</div>
-		{/if}
-		{#if children}
-			<div class="pointer-events-auto">
-				{@render children()}
-			</div>
-		{/if}
-	</div>
-{/if}
+				<RiArrowUpLine aria-hidden="true" />
+			</Button>
+		</div>
+	{/if}
+	{#if children}
+		<div class="pointer-events-auto">
+			{@render children()}
+		</div>
+	{/if}
+</div>
