@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { resolve } from "$app/paths";
+	import BackToTop from "$lib/components/back-to-top.svelte";
+	import CopyPageUrl from "$lib/components/copy-page-url.svelte";
 	import { Badge } from "$lib/components/ui/badge/index.js";
 	import MarkdownBody from "$lib/components/markdown-body.svelte";
 	import PostPager from "$lib/components/post-pager.svelte";
@@ -20,7 +22,9 @@
 					<span aria-hidden="true">/</span>
 					<time datetime={post.date}>{formatDate(post.date)}</time>
 				</p>
-				<h1 class="font-serif text-2xl font-semibold tracking-normal sm:text-3xl">{post.title}</h1>
+				<h1 id="post-heading" tabindex="-1" class="font-serif text-2xl font-semibold tracking-normal sm:text-3xl">
+					{post.title}
+				</h1>
 				{#if post.description}
 					<p class="font-serif text-muted-foreground text-base leading-7">{post.description}</p>
 				{/if}
@@ -56,3 +60,7 @@
 		{/if}
 	</div>
 </div>
+
+<BackToTop targetId="post-heading">
+	<CopyPageUrl />
+</BackToTop>
