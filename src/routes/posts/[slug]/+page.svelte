@@ -39,7 +39,7 @@
 
 			<Separator />
 
-			<MarkdownBody html={post.html} />
+			<MarkdownBody html={post.html} headingLinks />
 		</article>
 
 		{#if data.previous || data.next}

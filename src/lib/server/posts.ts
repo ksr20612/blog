@@ -1,9 +1,10 @@
 import grayMatter from "gray-matter";
-import { Marked } from "marked";
+import { Marked, type Token } from "marked";
 import { createHighlighter, type Highlighter } from "shiki";
 import { base } from "$app/paths";
 import { HOME_SECTION_POST_LIMIT } from "$lib/home-sections";
 import { toSearchText } from "$lib/search";
+import { site } from "$lib/site";
 import type {
 	AdjacentPost,
 	Post,
@@ -262,6 +263,62 @@ function resolveLocalUrl(href: string) {
 	return `${base}${href}`;
 }
 
+const siteHost = new URL(site.url).hostname;
+
+function safeHref(href: string) {
+	try {
+		return encodeURI(href);
+	} catch {
+		return null;
+	}
+}
+
+function isUnsafeProtocol(href: string) {
+	const protocol = href.trim().toLowerCase();
+	return (
+		protocol.startsWith("javascript:") ||
+		protocol.startsWith("data:") ||
+		protocol.startsWith("vbscript:")
+	);
+}
+
+function externalDestination(href: string): { href: string; domain: string } | null {
+	const trimmed = href.trim();
+
+	if (
+		trimmed.startsWith("#") ||
+		(trimmed.startsWith("/") && !trimmed.startsWith("//")) ||
+		trimmed.startsWith("./") ||
+		trimmed.startsWith("../")
+	) {
+		return null;
+	}
+
+	if (trimmed.toLowerCase().startsWith("mailto:")) {
+		const email = trimmed.slice("mailto:".length).split("?")[0];
+		return email ? { href: trimmed, domain: email } : null;
+	}
+
+	const candidate = trimmed.startsWith("www.") ? `https://${trimmed}` : trimmed;
+
+	try {
+		const url = new URL(candidate, site.url);
+		if (url.protocol !== "http:" && url.protocol !== "https:") {
+			return null;
+		}
+		if (url.hostname === siteHost) {
+			return null;
+		}
+
+		return {
+			href: url.href,
+			domain: url.hostname.replace(/^www\./, ""),
+		};
+	} catch {
+		return null;
+	}
+}
+
 async function renderMarkdown(markdown: string): Promise<{
 	html: string;
 	toc: TocItem[];
@@ -290,6 +347,32 @@ async function renderMarkdown(markdown: string): Promise<{
 				}
 
 				return `<h${depth} id="${escapeHtml(id)}">${escapeHtml(text)}</h${depth}>\n`;
+			},
+			link(
+				this: { parser: { parseInline: (tokens: Token[]) => string } },
+				{ href, title, tokens },
+			) {
+				const label = this.parser.parseInline(tokens);
+				if (isUnsafeProtocol(href)) {
+					return label;
+				}
+
+				const encoded = safeHref(href);
+				if (!encoded) {
+					return label;
+				}
+
+				const titleAttr = title ? ` title="${escapeHtml(title)}"` : "";
+				const external = externalDestination(href);
+
+				if (!external) {
+					return `<a href="${escapeHtml(encoded)}"${titleAttr}>${label}</a>`;
+				}
+
+				const domain = escapeHtml(external.domain);
+				const externalHref = safeHref(external.href) ?? encoded;
+
+				return `<a href="${escapeHtml(externalHref)}" class="external-link" target="_blank" rel="noopener noreferrer"${titleAttr}>${label}<span class="external-link-domain" aria-hidden="true">${domain}</span><span class="sr-only"> (${domain}, 새 창)</span></a>`;
 			},
 			image({ href, title, text }) {
 				const src = resolveLocalUrl(href);
