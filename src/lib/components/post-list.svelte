@@ -4,7 +4,7 @@
 	import type { Attachment } from "svelte/attachments";
 	import type { Snippet } from "svelte";
 	import { onMount, tick } from "svelte";
-	import { fly } from "svelte/transition";
+	import { fly, type TransitionConfig } from "svelte/transition";
 	import RiCloseLine from "remixicon-svelte/icons/close-line";
 	import RiFileTextLine from "remixicon-svelte/icons/file-text-line";
 	import RiSearchLine from "remixicon-svelte/icons/search-line";
@@ -42,6 +42,7 @@
 	let canScrollLeft = $state(false);
 	let canScrollRight = $state(false);
 	let filterAnnounced = $state(false);
+	let allowIntro = true;
 	let normalizedQuery = $derived(query.trim());
 	let hasFilter = $derived(Boolean(normalizedQuery || selectedTag));
 	let visibleItems = $derived.by(() =>
@@ -74,6 +75,18 @@
 
 		return `필터 해제됨. ${count}`;
 	});
+
+	function cardEnter(node: Element): TransitionConfig {
+		if (!allowIntro) {
+			return { duration: 0 };
+		}
+
+		return fly(node, { y: 12, duration: 220 });
+	}
+
+	function settleResults() {
+		allowIntro = false;
+	}
 
 	onMount(() => {
 		if (!searchable) {
@@ -122,6 +135,7 @@
 			return;
 		}
 
+		settleResults();
 		query = target.value;
 		filterAnnounced = true;
 	}
@@ -179,6 +193,7 @@
 	}
 
 	function clearQuery() {
+		settleResults();
 		query = "";
 		committedQuery = "";
 		filterAnnounced = true;
@@ -220,6 +235,7 @@
 	};
 
 	function toggleTag(tag: string, chip: HTMLElement) {
+		settleResults();
 		selectedTag = selectedTag === tag ? null : tag;
 		filterAnnounced = true;
 		if (searchable) {
@@ -395,7 +411,7 @@
 		{/if}
 		<ul class="grid gap-4 sm:grid-cols-2">
 			{#each visibleItems as item (item.post.slug)}
-				<li in:fly={{ y: 12, duration: 220 }}>
+				<li in:cardEnter>
 					<PostCard post={item.post} snippet={item.snippet} />
 				</li>
 			{/each}
