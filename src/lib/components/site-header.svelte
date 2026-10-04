@@ -112,7 +112,7 @@
 						<Sheet.Title>
 							{titleHead}<span class="text-primary">.</span>{titleTail}
 						</Sheet.Title>
-						<Sheet.Description>페이지로 이동</Sheet.Description>
+						<!-- <Sheet.Description>페이지로 이동</Sheet.Description> -->
 					</Sheet.Header>
 					<nav class="flex flex-col gap-1 px-4">
 						{#each links as link (link.href)}
