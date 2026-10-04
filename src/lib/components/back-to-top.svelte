@@ -12,9 +12,32 @@
 
 	let { targetId, children }: { targetId: string; children?: Snippet } = $props();
 
+	/** 이보다 작은 스크롤은 방향 판단에서 무시한다 */
+	const DIRECTION_DELTA_PX = 8;
+
 	let scrollY = $state(0);
 	let innerHeight = $state(0);
-	let visible = $derived(innerHeight > 0 && scrollY > innerHeight * 0.3);
+	let scrollingUp = $state(false);
+	let lastDirectionY = 0;
+	let directionReady = false;
+	let visible = $derived(innerHeight > 0 && scrollY > innerHeight * 0.3 && scrollingUp);
+
+	function onWindowScroll() {
+		const current = window.scrollY;
+		if (!directionReady) {
+			lastDirectionY = current;
+			directionReady = true;
+			return;
+		}
+
+		const delta = current - lastDirectionY;
+		if (Math.abs(delta) < DIRECTION_DELTA_PX) {
+			return;
+		}
+
+		scrollingUp = delta < 0;
+		lastDirectionY = current;
+	}
 
 	function cubicBezier(x1: number, y1: number, x2: number, y2: number) {
 		const sample = (t: number, a1: number, a2: number) => {
@@ -55,7 +78,7 @@
 	}
 </script>
 
-<svelte:window bind:scrollY bind:innerHeight />
+<svelte:window bind:scrollY bind:innerHeight onscroll={onWindowScroll} />
 
 <div
 	class="pointer-events-none fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-4xl flex-col items-end gap-2 px-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
