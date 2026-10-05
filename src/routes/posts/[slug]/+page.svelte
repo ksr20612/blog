@@ -18,7 +18,7 @@
 		<article class="flex flex-col gap-6">
 			<header class="flex flex-col gap-4">
 				<p class="text-muted-foreground text-sm">
-					<a href={resolve("/posts")} class="hover:text-foreground underline-offset-4 hover:underline">Posts</a>
+					<a href={resolve("/posts")} class="hover:text-foreground underline-offset-2 underline">Posts</a>
 					<span aria-hidden="true">/</span>
 					<time datetime={post.date}>{formatDate(post.date)}</time>
 				</p>
