@@ -8,6 +8,8 @@
 
 	/** sticky header(h-12) + 여유 — layout.css scroll-margin-top과 맞춤 */
 	const TOP_OFFSET_PX = 72;
+	/** 클릭 후 헤딩이 기준선 바로 아래에 있어도 active로 본다 */
+	const READING_SLOP_PX = 2;
 	/** 하단 이 거리 안이면 마지막 섹션을 active로 본다 */
 	const BOTTOM_THRESHOLD_PX = 96;
 	const MIN_SCROLL_MS = 400;
@@ -20,6 +22,8 @@
 	let markerReady = $state(false);
 	let headingScrollFrame = 0;
 	let headingScrollGeneration = 0;
+	let pinnedId: string | null = null;
+	let syncActive: (() => void) | null = null;
 
 	function cubicBezier(x1: number, y1: number, x2: number, y2: number) {
 		const sample = (t: number, a1: number, a2: number) => {
@@ -53,20 +57,28 @@
 
 	const headingScrollEase = cubicBezier(0.22, 1, 0.36, 1);
 
-	function stopHeadingScroll() {
+	function stopHeadingScroll(resumeTracking = false) {
 		headingScrollGeneration += 1;
 		if (headingScrollFrame) {
 			cancelAnimationFrame(headingScrollFrame);
 			headingScrollFrame = 0;
 		}
-		window.removeEventListener("wheel", stopHeadingScroll);
-		window.removeEventListener("touchmove", stopHeadingScroll);
+		window.removeEventListener("wheel", interruptHeadingScroll);
+		window.removeEventListener("touchmove", interruptHeadingScroll);
 		window.removeEventListener("keydown", stopHeadingScrollOnKey);
+		if (resumeTracking) {
+			pinnedId = null;
+			syncActive?.();
+		}
+	}
+
+	function interruptHeadingScroll() {
+		stopHeadingScroll(true);
 	}
 
 	function stopHeadingScrollOnKey(event: KeyboardEvent) {
 		if (event.key === "ArrowUp" || event.key === "ArrowDown" || event.key === "PageUp" || event.key === "PageDown" || event.key === "Home" || event.key === "End" || event.key === " ") {
-			stopHeadingScroll();
+			interruptHeadingScroll();
 		}
 	}
 
@@ -103,20 +115,26 @@
 				return;
 			}
 
-			const atBottom =
-				window.scrollY + window.innerHeight >=
-				document.documentElement.scrollHeight - BOTTOM_THRESHOLD_PX;
-			const reading = window.scrollY + TOP_OFFSET_PX;
+			const pinnedIndex = pinnedId ? nodes.findIndex((node) => node.id === pinnedId) : -1;
 			let index = 0;
 
-			for (let i = 0; i < nodes.length; i += 1) {
-				if (nodes[i].headingTop <= reading) {
-					index = i;
-				}
-			}
+			if (pinnedIndex >= 0) {
+				index = pinnedIndex;
+			} else {
+				const atBottom =
+					window.scrollY + window.innerHeight >=
+					document.documentElement.scrollHeight - BOTTOM_THRESHOLD_PX;
+				const reading = window.scrollY + TOP_OFFSET_PX + READING_SLOP_PX;
 
-			if (atBottom) {
-				index = nodes.length - 1;
+				for (let i = 0; i < nodes.length; i += 1) {
+					if (nodes[i].headingTop <= reading) {
+						index = i;
+					}
+				}
+
+				if (atBottom) {
+					index = nodes.length - 1;
+				}
 			}
 
 			const current = nodes[index];
@@ -136,6 +154,7 @@
 			});
 		}
 
+		syncActive = updateActive;
 		window.addEventListener("scroll", onScroll, { passive: true });
 		window.addEventListener("resize", onScroll, { passive: true });
 		updateActive();
@@ -147,6 +166,9 @@
 		return () => {
 			window.removeEventListener("scroll", onScroll);
 			window.removeEventListener("resize", onScroll);
+			if (syncActive === updateActive) {
+				syncActive = null;
+			}
 			stopHeadingScroll();
 			if (frame) {
 				cancelAnimationFrame(frame);
@@ -166,6 +188,8 @@
 
 		event.preventDefault();
 		stopHeadingScroll();
+		pinnedId = id;
+		syncActive?.();
 
 		const margin = Number.parseFloat(getComputedStyle(heading).scrollMarginTop) || 0;
 		const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -177,8 +201,18 @@
 		const distance = top - start;
 		history.pushState(history.state, "", `#${id}`);
 
+		function releasePin() {
+			headingScrollFrame = 0;
+			window.removeEventListener("wheel", interruptHeadingScroll);
+			window.removeEventListener("touchmove", interruptHeadingScroll);
+			window.removeEventListener("keydown", stopHeadingScrollOnKey);
+			pinnedId = null;
+			syncActive?.();
+		}
+
 		if (prefersReducedMotion.current || Math.abs(distance) < 1) {
 			window.scrollTo({ top, behavior: "auto" });
+			releasePin();
 			return;
 		}
 
@@ -186,8 +220,8 @@
 		const started = performance.now();
 		const generation = headingScrollGeneration;
 
-		window.addEventListener("wheel", stopHeadingScroll, { passive: true });
-		window.addEventListener("touchmove", stopHeadingScroll, { passive: true });
+		window.addEventListener("wheel", interruptHeadingScroll, { passive: true });
+		window.addEventListener("touchmove", interruptHeadingScroll, { passive: true });
 		window.addEventListener("keydown", stopHeadingScrollOnKey);
 
 		const step = (now: number) => {
@@ -206,10 +240,7 @@
 				return;
 			}
 
-			headingScrollFrame = 0;
-			window.removeEventListener("wheel", stopHeadingScroll);
-			window.removeEventListener("touchmove", stopHeadingScroll);
-			window.removeEventListener("keydown", stopHeadingScrollOnKey);
+			releasePin();
 		};
 
 		headingScrollFrame = requestAnimationFrame(step);
