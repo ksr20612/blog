@@ -34,7 +34,9 @@ export const enhanceHeadingLinks: Attachment = (element) => {
 	const timers = new Map<HTMLButtonElement, number>();
 	const buttons: HTMLButtonElement[] = [];
 
-	for (const heading of element.querySelectorAll<HTMLHeadingElement>("h2[id], h3[id]")) {
+	for (const heading of element.querySelectorAll<HTMLHeadingElement>(
+		"h2[id], h3[id]",
+	)) {
 		if (!heading.id || heading.querySelector(".heading-link")) {
 			continue;
 		}
@@ -64,7 +66,11 @@ export const enhanceHeadingLinks: Attachment = (element) => {
 				return;
 			}
 
-			history.replaceState(history.state, "", `${url.pathname}${url.search}${url.hash}`);
+			history.replaceState(
+				history.state,
+				"",
+				`${url.pathname}${url.search}${url.hash}`,
+			);
 			button.dataset.copied = "true";
 			button.setAttribute("aria-label", "이 섹션 주소를 복사했습니다");
 			status.dataset.owner = heading.id;

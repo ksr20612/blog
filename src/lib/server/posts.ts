@@ -282,7 +282,9 @@ function isUnsafeProtocol(href: string) {
 	);
 }
 
-function externalDestination(href: string): { href: string; domain: string } | null {
+function externalDestination(
+	href: string,
+): { href: string; domain: string } | null {
 	const trimmed = href.trim();
 
 	if (
