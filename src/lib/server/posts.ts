@@ -1,5 +1,5 @@
 import grayMatter from "gray-matter";
-import { Marked, type Token } from "marked";
+import { Marked, type Token, type Tokens } from "marked";
 import { createHighlighter, type Highlighter } from "shiki";
 import { base } from "$app/paths";
 import { HOME_SECTION_POST_LIMIT } from "$lib/home-sections";
@@ -321,6 +321,68 @@ function externalDestination(
 	}
 }
 
+const imageWidthPattern = /^\s*\{([1-9]\d{0,3})\}/;
+
+function takeImageWidth(tokens: Token[], index: number) {
+	const next = tokens[index + 1];
+	if (next?.type !== "text") {
+		return undefined;
+	}
+
+	const match = next.text.match(imageWidthPattern);
+	if (!match) {
+		return undefined;
+	}
+
+	const rest = next.text.slice(match[0].length);
+	if (rest.length > 0) {
+		next.text = rest;
+		next.raw = rest;
+	} else {
+		tokens.splice(index + 1, 1);
+	}
+
+	return Number(match[1]);
+}
+
+function applyImageWidths(tokens: Token[]) {
+	for (let index = 0; index < tokens.length; index += 1) {
+		const token = tokens[index];
+		if (!token) {
+			continue;
+		}
+
+		if (token.type === "image") {
+			const width = takeImageWidth(tokens, index);
+			if (width) {
+				(token as Tokens.Image & { width?: number }).width = width;
+			}
+		}
+
+		if ("tokens" in token && Array.isArray(token.tokens)) {
+			applyImageWidths(token.tokens);
+		}
+
+		if (token.type === "list") {
+			for (const item of (token as Tokens.List).items) {
+				applyImageWidths(item.tokens);
+			}
+		}
+
+		if (token.type === "table") {
+			const table = token as Tokens.Table;
+			for (const cell of table.header) {
+				applyImageWidths(cell.tokens);
+			}
+			for (const row of table.rows) {
+				for (const cell of row) {
+					applyImageWidths(cell.tokens);
+				}
+			}
+		}
+	}
+}
+
 async function renderMarkdown(markdown: string): Promise<{
 	html: string;
 	toc: TocItem[];
@@ -330,6 +392,12 @@ async function renderMarkdown(markdown: string): Promise<{
 	const usedIds = new Map<string, number>();
 	const marked = new Marked({
 		gfm: true,
+		hooks: {
+			processAllTokens(tokens) {
+				applyImageWidths(tokens);
+				return tokens;
+			},
+		},
 		renderer: {
 			code({ text, lang }) {
 				return highlighter.codeToHtml(text, {
@@ -376,11 +444,16 @@ async function renderMarkdown(markdown: string): Promise<{
 
 				return `<a href="${escapeHtml(externalHref)}" class="external-link" target="_blank" rel="noopener noreferrer"${titleAttr}>${label}<span class="external-link-domain" aria-hidden="true">${domain}</span><span class="sr-only"> (${domain}, 새 창)</span></a>`;
 			},
-			image({ href, title, text }) {
+			image(token) {
+				const { href, title, text } = token;
+				const width = (token as Tokens.Image & { width?: number }).width;
 				const src = resolveLocalUrl(href);
 				const titleAttr = title ? ` title="${escapeHtml(title)}"` : "";
+				const sizeAttr = width
+					? ` style="width: ${width}px; max-width: 100%; height: auto"`
+					: "";
 
-				return `<img src="${escapeHtml(src)}" alt="${escapeHtml(text)}"${titleAttr}>`;
+				return `<img src="${escapeHtml(src)}" alt="${escapeHtml(text)}"${titleAttr}${sizeAttr}>`;
 			},
 			table: renderMarkdownTable,
 		},
