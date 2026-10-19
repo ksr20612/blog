@@ -17,7 +17,7 @@
 	}
 </script>
 
-<section class="mx-auto flex max-w-4xl flex-col gap-8 px-8 py-12">
+<section class="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-12">
 	<div class="flex flex-col gap-2">
 		<h1 class="font-serif text-2xl font-semibold tracking-normal sm:text-3xl leading-10">
 			<span class="text-primary">사람</span>을 먼저 생각하는 <br/> 조금 특이한 개발자의 기록<span class="text-primary">.</span>

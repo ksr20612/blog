@@ -3,6 +3,7 @@
 	import { page } from "$app/state";
 	import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
 	import * as Sheet from "$lib/components/ui/sheet/index.js";
+	import logo from "$lib/assets/favicon-32x32.png";
 	import { site } from "$lib/site";
 	import { cn } from "$lib/utils.js";
 	import RiAccountCircleLine from "remixicon-svelte/icons/account-circle-line";
@@ -73,8 +74,9 @@
 
 <header class="border-b bg-background/80 sticky top-0 z-40 backdrop-blur">
 	<div class="mx-auto flex h-12 max-w-4xl items-center justify-between gap-4 px-4">
-		<a href={resolve("/")} class="font-medium tracking-tight">
-			{titleHead}<span class="text-primary">.</span>{titleTail}
+		<a href={resolve("/")} class="inline-flex items-center gap-1.5 font-medium tracking-tight">
+			<img src={logo} alt="" width="16" height="16" class="size-4 shrink-0" />
+			<span>{titleHead}<span class="text-primary">.</span>{titleTail}</span>
 		</a>
 
 		<div class="hidden items-center gap-1 md:flex">
