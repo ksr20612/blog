@@ -263,6 +263,13 @@ function resolveLocalUrl(href: string) {
 	return `${base}${href}`;
 }
 
+function rewriteRootUrls(html: string) {
+	return html.replace(
+		/(\s(?:src|href)\s*=\s*["'])(\/(?!\/)[^"']*)/gi,
+		(_match, attr: string, path: string) => `${attr}${resolveLocalUrl(path)}`,
+	);
+}
+
 const siteHost = new URL(site.url).hostname;
 
 function safeHref(href: string) {
@@ -436,13 +443,16 @@ async function renderMarkdown(markdown: string): Promise<{
 				const external = externalDestination(href);
 
 				if (!external) {
-					return `<a href="${escapeHtml(encoded)}"${titleAttr}>${label}</a>`;
+					return `<a href="${escapeHtml(resolveLocalUrl(encoded))}"${titleAttr}>${label}</a>`;
 				}
 
 				const domain = escapeHtml(external.domain);
 				const externalHref = safeHref(external.href) ?? encoded;
 
 				return `<a href="${escapeHtml(externalHref)}" class="external-link" target="_blank" rel="noopener noreferrer"${titleAttr}>${label}<span class="external-link-domain" aria-hidden="true">${domain}</span><span class="sr-only"> (${domain}, 새 창)</span></a>`;
+			},
+			html({ text }) {
+				return rewriteRootUrls(text);
 			},
 			image(token) {
 				const { href, title, text } = token;
