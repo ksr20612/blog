@@ -12,6 +12,7 @@ import type {
 	SearchablePost,
 	TocItem,
 } from "$lib/types";
+import { extractNoteCallout } from "./markdown-notes";
 import { renderMarkdownTable } from "./markdown-tables";
 
 type Frontmatter = {
@@ -466,6 +467,26 @@ async function renderMarkdown(markdown: string): Promise<{
 				return `<img src="${escapeHtml(src)}" alt="${escapeHtml(text)}"${titleAttr}${sizeAttr}>`;
 			},
 			table: renderMarkdownTable,
+			blockquote(
+				this: {
+					parser: {
+						parse: (tokens: Token[]) => string;
+						parseInline: (tokens: Token[]) => string;
+					};
+				},
+				token: Tokens.Blockquote,
+			) {
+				const note = extractNoteCallout(token.tokens);
+				if (!note) {
+					return `<blockquote>\n${this.parser.parse(token.tokens)}</blockquote>\n`;
+				}
+
+				const title =
+					note.title.length > 0 ? this.parser.parseInline(note.title) : "참고";
+				const body = this.parser.parse(note.body);
+
+				return `<aside class="markdown-note"><p class="markdown-note-title">${title}</p>\n${body}</aside>\n`;
+			},
 		},
 	});
 
