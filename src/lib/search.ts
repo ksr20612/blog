@@ -25,6 +25,7 @@ export function toSearchText(markdown: string) {
 		.replace(/<[^>]+>/g, " ")
 		.replace(/^#{1,6}\s+/gm, "")
 		.replace(/^\s*>\s?/gm, "")
+		.replace(/\[!note\]\s*/gi, "")
 		.replace(/^\s*[-*+]\s+/gm, "")
 		.replace(/^\s*\d+\.\s+/gm, "")
 		.replace(/[*~]+/g, "")
