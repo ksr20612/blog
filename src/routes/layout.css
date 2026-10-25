@@ -352,6 +352,9 @@
 	position: absolute;
 	top: 0.75rem;
 	right: 0.75rem;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
 	border-radius: calc(var(--radius) * 0.8);
 	border: 1px solid var(--border);
 	background: var(--background);
@@ -359,10 +362,47 @@
 	padding: 0.25rem 0.5rem;
 	font-size: 0.75rem;
 	line-height: 1;
+	transition:
+		color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+		border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .code-copy:hover {
 	color: var(--foreground);
+}
+
+.code-copy [data-icon="check"] {
+	display: none;
+	width: 0.875rem;
+	height: 0.875rem;
+	flex: none;
+	pointer-events: none;
+}
+
+.code-copy[data-copied="true"] {
+	color: var(--primary);
+	border-color: color-mix(in oklab, var(--primary) 40%, var(--border));
+}
+
+.code-copy[data-copied="true"]:hover {
+	color: var(--primary);
+}
+
+.code-copy[data-copied="true"] [data-icon="check"] {
+	display: block;
+	animation: code-copy-check-in 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes code-copy-check-in {
+	from {
+		opacity: 0;
+		scale: 0.6;
+	}
+
+	to {
+		opacity: 1;
+		scale: 1;
+	}
 }
 
 .markdown-figure {
