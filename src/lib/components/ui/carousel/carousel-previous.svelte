@@ -35,5 +35,5 @@
 	bind:ref
 >
 	<RiArrowLeftLine />
-	<span class="sr-only">Previous slide</span>
+	<span class="sr-only">이전 슬라이드</span>
 </Button>

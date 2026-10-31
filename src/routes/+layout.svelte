@@ -30,9 +30,10 @@
 
 <ModeWatcher defaultMode="dark" />
 
-<div class="flex min-h-svh flex-col">
+<div class="relative flex min-h-svh flex-col">
+	<a href="#main-content" class="skip-link">본문으로 건너뛰기</a>
 	<SiteHeader />
-	<main class="flex-1">
+	<main id="main-content" class="flex-1" tabindex="-1">
 		{@render children()}
 	</main>
 	<SiteFooter />

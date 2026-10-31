@@ -35,5 +35,5 @@
 	{...restProps}
 >
 	<RiArrowRightLine />
-	<span class="sr-only">Next slide</span>
+	<span class="sr-only">다음 슬라이드</span>
 </Button>

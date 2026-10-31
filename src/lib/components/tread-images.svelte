@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { base } from "$app/paths";
-	import { Badge } from "$lib/components/ui/badge/index.js";
+	import * as Carousel from "$lib/components/ui/carousel/index.js";
 	import type { TreadImage } from "$lib/types";
+	import TreadImageStatus from "./tread-image-status.svelte";
 
 	let { images }: { images: TreadImage[] } = $props();
 
@@ -14,25 +15,34 @@
 	}
 
 	const cover = $derived(images[0]);
+	const hasGallery = $derived(images.length > 1);
 </script>
 
-{#if cover}
+{#snippet frame(image: TreadImage)}
 	<div class="relative aspect-[4/3] overflow-hidden bg-muted">
 		<img
-			src={srcFor(cover)}
-			alt={cover.alt}
+			src={srcFor(image)}
+			alt={image.alt}
 			class="size-full object-cover"
 			loading="lazy"
 			decoding="async"
 		/>
-		{#if images.length > 1}
-			<Badge
-				variant="secondary"
-				class="absolute end-3 top-3 bg-background/80"
-				aria-label="{images.length}장의 이미지"
-			>
-				{images.length}
-			</Badge>
-		{/if}
 	</div>
+{/snippet}
+
+{#if hasGallery}
+	<Carousel.Root class="relative" opts={{ align: "start" }} aria-label="이미지 {images.length}장">
+		<Carousel.Content class="ms-0">
+			{#each images as image (image.src)}
+				<Carousel.Item class="ps-0">
+					{@render frame(image)}
+				</Carousel.Item>
+			{/each}
+		</Carousel.Content>
+		<Carousel.Previous class="start-3 bg-background/80" />
+		<Carousel.Next class="end-3 bg-background/80" />
+		<TreadImageStatus total={images.length} />
+	</Carousel.Root>
+{:else if cover}
+	{@render frame(cover)}
 {/if}
