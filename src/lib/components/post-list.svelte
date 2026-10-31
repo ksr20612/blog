@@ -158,7 +158,7 @@
 	}
 
 	const SEARCH_COMMIT_MS = 300;
-	let commitTimer = 0;
+	let commitTimer: ReturnType<typeof setTimeout> | undefined;
 	let openingSearch = false;
 
 	onDestroy(() => {
