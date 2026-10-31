@@ -3,7 +3,7 @@
 	import { page } from "$app/state";
 	import type { Attachment } from "svelte/attachments";
 	import type { Snippet } from "svelte";
-	import { onMount, tick } from "svelte";
+	import { onDestroy, onMount, tick } from "svelte";
 	import { fly, type TransitionConfig } from "svelte/transition";
 	import RiCloseLine from "remixicon-svelte/icons/close-line";
 	import RiFileTextLine from "remixicon-svelte/icons/file-text-line";
@@ -138,9 +138,11 @@
 		settleResults();
 		query = target.value;
 		filterAnnounced = true;
+		scheduleCommit();
 	}
 
 	function commitSearch() {
+		clearTimeout(commitTimer);
 		committedQuery = query.trim();
 		filterAnnounced = true;
 		syncFilterUrl(committedQuery, selectedTag);
@@ -155,7 +157,20 @@
 		commitSearch();
 	}
 
+	const SEARCH_COMMIT_MS = 300;
+	let commitTimer = 0;
 	let openingSearch = false;
+
+	onDestroy(() => {
+		clearTimeout(commitTimer);
+	});
+
+	function scheduleCommit() {
+		clearTimeout(commitTimer);
+		commitTimer = setTimeout(() => {
+			commitSearch();
+		}, SEARCH_COMMIT_MS);
+	}
 
 	async function openSearch(event: PointerEvent) {
 		if (searchOpen || window.matchMedia("(min-width: 640px)").matches) {

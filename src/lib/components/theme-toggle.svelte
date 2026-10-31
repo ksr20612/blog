@@ -17,7 +17,7 @@
 	variant="outline"
 	size="icon"
 	class={cn("relative", className)}
-	aria-label="다크 모드"
+	aria-label="어두운 화면"
 >
 	<RiSunLine class="scale-100 rotate-0 !transition-all dark:scale-0 dark:-rotate-90" aria-hidden="true" />
 	<RiMoonLine class="absolute scale-0 rotate-90 !transition-all dark:scale-100 dark:rotate-0" aria-hidden="true" />

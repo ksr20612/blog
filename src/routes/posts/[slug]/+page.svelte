@@ -39,6 +39,12 @@
 
 			<Separator />
 
+			{#if post.toc.length > 0}
+				<div class="toc:hidden">
+					<PostToc items={post.toc} variant="disclosure" />
+				</div>
+			{/if}
+
 			<MarkdownBody html={post.html} headingLinks />
 		</article>
 

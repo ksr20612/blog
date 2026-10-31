@@ -37,7 +37,11 @@ export const enhanceHeadingLinks: Attachment = (element) => {
 	for (const heading of element.querySelectorAll<HTMLHeadingElement>(
 		"h2[id], h3[id]",
 	)) {
-		if (!heading.id || heading.querySelector(".heading-link")) {
+		if (
+			!heading.id ||
+			heading.closest(".heading-block") ||
+			heading.querySelector(".heading-link")
+		) {
 			continue;
 		}
 
@@ -83,7 +87,10 @@ export const enhanceHeadingLinks: Attachment = (element) => {
 			timers.set(button, window.setTimeout(reset, 1500));
 		});
 
-		heading.append(button);
+		const wrap = document.createElement("div");
+		wrap.className = "heading-block";
+		heading.replaceWith(wrap);
+		wrap.append(heading, button);
 		buttons.push(button);
 	}
 
@@ -92,6 +99,11 @@ export const enhanceHeadingLinks: Attachment = (element) => {
 			window.clearTimeout(timer);
 		}
 		for (const button of buttons) {
+			const wrap = button.parentElement;
+			const heading = wrap?.querySelector("h2, h3");
+			if (wrap?.classList.contains("heading-block") && heading) {
+				wrap.replaceWith(heading);
+			}
 			button.remove();
 		}
 		status.remove();

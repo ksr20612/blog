@@ -464,7 +464,9 @@ async function renderMarkdown(markdown: string): Promise<{
 					? ` style="width: ${width}px; max-width: 100%; height: auto"`
 					: "";
 
-				return `<img src="${escapeHtml(src)}" alt="${escapeHtml(text)}"${titleAttr}${sizeAttr}>`;
+				const widthAttr = width ? ` width="${width}"` : "";
+
+				return `<img src="${escapeHtml(src)}" alt="${escapeHtml(text)}" loading="lazy" decoding="async"${titleAttr}${widthAttr}${sizeAttr}>`;
 			},
 			table: renderMarkdownTable,
 			blockquote(

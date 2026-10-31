@@ -163,6 +163,32 @@
 	}
 }
 
+.skip-link {
+	position: absolute;
+	inset-inline-start: 1rem;
+	top: 0.75rem;
+	z-index: 100;
+	padding: 0.4rem 0.75rem;
+	border: 1px solid var(--ring);
+	border-radius: var(--radius);
+	background: var(--background);
+	color: var(--foreground);
+	font-size: 0.875rem;
+	line-height: 1.4;
+	text-decoration: none;
+	transform: translateY(-220%);
+}
+
+.skip-link:focus {
+	transform: none;
+	outline: none;
+	box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent);
+}
+
+#main-content:focus {
+	outline: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
@@ -258,11 +284,27 @@
 	transform: translateX(-50%) translateY(0);
 }
 
-.markdown-body :where(h2, h3) {
-	scroll-margin-top: 4.5rem;
+.markdown-body .heading-block {
+	position: relative;
 }
 
-.markdown-body :where(h2, h3) .heading-link {
+.markdown-body .heading-block:has(h2) {
+	margin-top: 2em;
+	margin-bottom: 1em;
+}
+
+.markdown-body .heading-block:has(h3) {
+	margin-top: 1.6em;
+	margin-bottom: 0.6em;
+}
+
+.markdown-body .heading-block :where(h2, h3) {
+	scroll-margin-top: 4.5rem;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.markdown-body .heading-block .heading-link {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -287,12 +329,21 @@
 		background-color 150ms ease;
 }
 
-@media (width >= 86rem) {
-	.markdown-body :where(h2, h3) {
-		position: relative;
+@media (width < 86rem) {
+	.markdown-body .heading-block {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
 	}
 
-	.markdown-body :where(h2, h3) .heading-link {
+	.markdown-body .heading-block :where(h2, h3) {
+		flex: 1;
+		min-width: 0;
+	}
+}
+
+@media (width >= 86rem) {
+	.markdown-body .heading-block .heading-link {
 		position: absolute;
 		top: 50%;
 		left: -1.75rem;
@@ -302,8 +353,8 @@
 	}
 }
 
-.markdown-body :where(h2, h3):hover .heading-link,
-.markdown-body :where(h2, h3):focus-within .heading-link,
+.markdown-body .heading-block:hover .heading-link,
+.markdown-body .heading-block:focus-within .heading-link,
 .heading-link[data-copied="true"] {
 	opacity: 1;
 }

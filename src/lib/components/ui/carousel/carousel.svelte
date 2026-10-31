@@ -89,7 +89,7 @@
 	data-slot="carousel"
 	class={cn("relative", className)}
 	role="region"
-	aria-roledescription="carousel"
+	aria-roledescription="슬라이드"
 	{...restProps}
 >
 	{@render children?.()}

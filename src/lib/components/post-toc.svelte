@@ -4,7 +4,13 @@
 	import type { TocItem } from "$lib/types";
 	import { cn } from "$lib/utils";
 
-	let { items }: { items: TocItem[] } = $props();
+	let {
+		items,
+		variant = "nav",
+	}: {
+		items: TocItem[];
+		variant?: "nav" | "disclosure";
+	} = $props();
 
 	/** sticky header(h-12) + 여유 — layout.css scroll-margin-top과 맞춤 */
 	const TOP_OFFSET_PX = 72;
@@ -245,9 +251,50 @@
 
 		headingScrollFrame = requestAnimationFrame(step);
 	}
+
+	function onDisclosureClick(event: MouseEvent, id: string) {
+		if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+			return;
+		}
+
+		event.preventDefault();
+		const details =
+			event.currentTarget instanceof Element
+				? event.currentTarget.closest("details")
+				: null;
+		if (details) {
+			details.open = false;
+		}
+
+		requestAnimationFrame(() => {
+			scrollToHeading(event, id);
+		});
+	}
 </script>
 
-{#if items.length > 0}
+{#if items.length > 0 && variant === "disclosure"}
+	<details class="border-border bg-card rounded-lg border px-3 py-2">
+		<summary class="cursor-pointer text-sm font-medium">목차</summary>
+		<nav aria-label="목차" class="mt-2">
+			<ul class="flex flex-col">
+				{#each items as item (item.id)}
+					<li>
+						<a
+							href="#{item.id}"
+							onclick={(event) => onDisclosureClick(event, item.id)}
+							class={cn(
+								"text-muted-foreground hover:text-foreground block py-1 text-sm leading-5",
+								item.depth === 3 && "pl-4",
+							)}
+						>
+							{item.text}
+						</a>
+					</li>
+				{/each}
+			</ul>
+		</nav>
+	</details>
+{:else if items.length > 0}
 	<nav aria-label="목차" {@attach trackActive}>
 		<p class="text-muted-foreground mb-2 text-xs font-medium">목차</p>
 		<ul class="border-border relative flex flex-col border-l">
