@@ -1,5 +1,6 @@
 import { error } from "@sveltejs/kit";
 import { getAdjacentPosts, getPost, getPosts } from "$lib/server/posts";
+import { getRelatedPosts } from "$lib/server/related-posts";
 import { site } from "$lib/site";
 import type { EntryGenerator, PageServerLoad } from "./$types";
 
@@ -25,6 +26,7 @@ export const load: PageServerLoad = async ({ params }) => {
 			markdownPath: `/posts/${post.slug}.md`,
 		},
 		post,
+		relatedPosts: getRelatedPosts(params.slug),
 		...getAdjacentPosts(params.slug),
 	};
 };

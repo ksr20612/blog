@@ -6,6 +6,7 @@
 	import MarkdownBody from "$lib/components/markdown-body.svelte";
 	import PostPager from "$lib/components/post-pager.svelte";
 	import PostToc from "$lib/components/post-toc.svelte";
+	import RelatedPosts from "$lib/components/related-posts.svelte";
 	import { Separator } from "$lib/components/ui/separator/index.js";
 	import { formatDate } from "$lib/format";
 
@@ -48,10 +49,18 @@
 			<MarkdownBody html={post.html} headingLinks />
 		</article>
 
-		{#if data.previous || data.next}
+		{#if data.relatedPosts.length >= 2 || data.previous || data.next}
 			<div class="mt-10 flex flex-col gap-6">
 				<Separator />
-				<PostPager previous={data.previous} next={data.next} />
+				{#if data.relatedPosts.length >= 2}
+					<RelatedPosts posts={data.relatedPosts} />
+				{/if}
+				{#if data.relatedPosts.length >= 2 && (data.previous || data.next)}
+					<Separator />
+				{/if}
+				{#if data.previous || data.next}
+					<PostPager previous={data.previous} next={data.next} />
+				{/if}
 			</div>
 		{/if}
 
