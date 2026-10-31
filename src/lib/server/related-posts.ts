@@ -43,12 +43,14 @@ function median(values: readonly number[]) {
 
 	const sorted = [...values].sort((a, b) => a - b);
 	const middle = Math.floor(sorted.length / 2);
+	const high = sorted[middle] ?? Number.POSITIVE_INFINITY;
 
 	if (sorted.length % 2 === 0) {
-		return (sorted[middle - 1]! + sorted[middle]!) / 2;
+		const low = sorted[middle - 1] ?? high;
+		return (low + high) / 2;
 	}
 
-	return sorted[middle]!;
+	return high;
 }
 
 function dateDistance(left: string, right: string) {
@@ -58,7 +60,9 @@ function dateDistance(left: string, right: string) {
 }
 
 function sharesSection(current: PostMeta, candidate: PostMeta) {
-	return current.sections.some((section) => candidate.sections.includes(section));
+	return current.sections.some((section) =>
+		candidate.sections.includes(section),
+	);
 }
 
 export function selectRelatedPosts(
