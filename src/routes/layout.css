@@ -252,6 +252,36 @@
 	position: relative;
 }
 
+.markdown-body a.external-link:has(.external-link-icon) {
+	text-decoration: none;
+}
+
+.markdown-body a.external-link .external-link-text {
+	text-decoration-line: underline;
+	text-decoration-color: color-mix(in oklab, var(--primary) 40%, transparent);
+	text-underline-offset: 0.18em;
+}
+
+.markdown-body a.external-link:hover .external-link-text,
+.markdown-body a.external-link:focus-visible .external-link-text {
+	text-decoration-color: var(--primary);
+}
+
+.markdown-body a.external-link .external-link-icon {
+	display: inline-block;
+	margin-inline-start: 0.12em;
+	color: var(--muted-foreground);
+	line-height: 0;
+	vertical-align: -0.08em;
+	white-space: nowrap;
+}
+
+.markdown-body a.external-link .external-link-icon svg {
+	width: 0.78em;
+	height: 0.78em;
+	display: block;
+}
+
 .markdown-body a.external-link .external-link-domain {
 	position: absolute;
 	left: 50%;

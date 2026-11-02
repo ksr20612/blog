@@ -273,6 +273,9 @@ function rewriteRootUrls(html: string) {
 
 const siteHost = new URL(site.url).hostname;
 
+const externalLinkIcon =
+	'<span class="external-link-icon" aria-hidden="true">\u2060<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M10 6V8H5V19H16V14H18V20C18 20.5523 17.5523 21 17 21H4C3.44772 21 3 20.5523 3 20V7C3 6.44772 3.44772 6 4 6H10ZM21 3V11H19L18.9999 6.413L11.2071 14.2071L9.79289 12.7929L17.5849 5H13V3H21Z"/></svg></span>';
+
 function safeHref(href: string) {
 	try {
 		return encodeURI(href);
@@ -292,7 +295,7 @@ function isUnsafeProtocol(href: string) {
 
 function externalDestination(
 	href: string,
-): { href: string; domain: string } | null {
+): { href: string; domain: string; newWindow: boolean } | null {
 	const trimmed = href.trim();
 
 	if (
@@ -306,7 +309,7 @@ function externalDestination(
 
 	if (trimmed.toLowerCase().startsWith("mailto:")) {
 		const email = trimmed.slice("mailto:".length).split("?")[0];
-		return email ? { href: trimmed, domain: email } : null;
+		return email ? { href: trimmed, domain: email, newWindow: false } : null;
 	}
 
 	const candidate = trimmed.startsWith("www.") ? `https://${trimmed}` : trimmed;
@@ -323,6 +326,7 @@ function externalDestination(
 		return {
 			href: url.href,
 			domain: url.hostname.replace(/^www\./, ""),
+			newWindow: true,
 		};
 	} catch {
 		return null;
@@ -449,8 +453,11 @@ async function renderMarkdown(markdown: string): Promise<{
 
 				const domain = escapeHtml(external.domain);
 				const externalHref = safeHref(external.href) ?? encoded;
+				const visibleLabel = external.newWindow
+					? `<span class="external-link-text">${label}</span>${externalLinkIcon}`
+					: label;
 
-				return `<a href="${escapeHtml(externalHref)}" class="external-link" target="_blank" rel="noopener noreferrer"${titleAttr}>${label}<span class="external-link-domain" aria-hidden="true">${domain}</span><span class="sr-only"> (${domain}, 새 창)</span></a>`;
+				return `<a href="${escapeHtml(externalHref)}" class="external-link" target="_blank" rel="noopener noreferrer"${titleAttr}>${visibleLabel}<span class="external-link-domain" aria-hidden="true">${domain}</span><span class="sr-only"> (${domain}, 새 창)</span></a>`;
 			},
 			html({ text }) {
 				return rewriteRootUrls(text);
