@@ -8,7 +8,7 @@
 	import RiCloseLine from "remixicon-svelte/icons/close-line";
 	import RiFileTextLine from "remixicon-svelte/icons/file-text-line";
 	import RiSearchLine from "remixicon-svelte/icons/search-line";
-	import { Badge } from "$lib/components/ui/badge/index.js";
+	import { badgeVariants } from "$lib/components/ui/badge/index.js";
 	import * as Empty from "$lib/components/ui/empty/index.js";
 	import * as InputGroup from "$lib/components/ui/input-group/index.js";
 	import { bodySnippet, postMatchesQuery, type SearchableListPost } from "$lib/search";
@@ -41,6 +41,18 @@
 	let stuck = $state(false);
 	let canScrollLeft = $state(false);
 	let canScrollRight = $state(false);
+	let activeTag = $state<string | null>(null);
+	let toolbarTag = $derived.by(() => {
+		if (activeTag && tags.includes(activeTag)) {
+			return activeTag;
+		}
+
+		if (selectedTag && tags.includes(selectedTag)) {
+			return selectedTag;
+		}
+
+		return tags[0] ?? null;
+	});
 	let filterAnnounced = $state(false);
 	let allowIntro = true;
 	let normalizedQuery = $derived(query.trim());
@@ -250,6 +262,7 @@
 	};
 
 	function toggleTag(tag: string, chip: HTMLElement) {
+		activeTag = tag;
 		settleResults();
 		selectedTag = selectedTag === tag ? null : tag;
 		filterAnnounced = true;
@@ -257,6 +270,67 @@
 			syncFilterUrl(committedQuery, selectedTag);
 		}
 		chip.scrollIntoView({ inline: "nearest", block: "nearest" });
+	}
+
+	function onTagToolbarKeydown(event: KeyboardEvent) {
+		const key = event.key;
+		const forward = key === "ArrowRight";
+		const backward = key === "ArrowLeft";
+		const home = key === "Home";
+		const end = key === "End";
+
+		if (!forward && !backward && !home && !end) {
+			return;
+		}
+
+		const toolbar = event.currentTarget;
+		const current = event.target;
+
+		if (!(toolbar instanceof HTMLElement) || !(current instanceof HTMLButtonElement)) {
+			return;
+		}
+
+		if (!current.hasAttribute("data-tag-chip")) {
+			return;
+		}
+
+		const items = [
+			...toolbar.querySelectorAll<HTMLButtonElement>("[data-tag-chip]"),
+		];
+		const index = items.indexOf(current);
+
+		if (index < 0) {
+			return;
+		}
+
+		let next = index;
+
+		if (forward) {
+			next = (index + 1) % items.length;
+		} else if (backward) {
+			next = (index - 1 + items.length) % items.length;
+		} else if (home) {
+			next = 0;
+		} else {
+			next = items.length - 1;
+		}
+
+		event.preventDefault();
+
+		if (next === index) {
+			return;
+		}
+
+		const nextTag = tags[next];
+		const nextChip = items[next];
+
+		if (!nextTag || !nextChip) {
+			return;
+		}
+
+		activeTag = nextTag;
+		nextChip.focus();
+		nextChip.scrollIntoView({ inline: "nearest", block: "nearest" });
 	}
 </script>
 
@@ -340,13 +414,21 @@
 			</div>
 		{/if}
 		{#if tags.length > 0}
-			<div role="group" aria-label="태그 필터" aria-describedby={hintId}>
+			<div
+				role="toolbar"
+				tabindex="-1"
+				aria-label="태그 필터"
+				aria-orientation="horizontal"
+				aria-describedby={hintId}
+				class="rounded-lg has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/50"
+				onkeydown={onTagToolbarKeydown}
+			>
 				<p id={hintId} class="sr-only">
 					태그를 선택하면 해당 글만 보입니다. 같은 태그를 다시 누르면 해제됩니다.
 				</p>
 				<div
 					class={cn(
-						"-mx-4 overflow-x-auto px-4 touch-pan-x overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+						"overflow-x-auto p-1 touch-pan-x overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
 						canScrollLeft &&
 							canScrollRight &&
 							"[mask-image:linear-gradient(to_right,transparent,black_1.25rem,black_calc(100%-1.25rem),transparent)]",
@@ -362,28 +444,23 @@
 					<div class="flex w-max gap-2">
 						{#each tags as tag (tag)}
 							{@const selected = selectedTag === tag}
-							<Badge
-								variant={selected ? "default" : "secondary"}
-								role="button"
-								tabindex={0}
+							<button
+								type="button"
+								data-tag-chip
+								tabindex={tag === toolbarTag ? 0 : -1}
 								aria-pressed={selected}
 								aria-controls={resultsId}
 								class={cn(
+									badgeVariants({ variant: selected ? "default" : "secondary" }),
 									"cursor-pointer",
 									selected
 										? "hover:bg-primary/80 active:bg-primary/80"
 										: "hover:bg-selection active:bg-selection",
 								)}
 								onclick={(event) => toggleTag(tag, event.currentTarget)}
-								onkeydown={(event) => {
-									if (event.key === "Enter" || event.key === " ") {
-										event.preventDefault();
-										toggleTag(tag, event.currentTarget);
-									}
-								}}
 							>
 								{tag}
-							</Badge>
+							</button>
 						{/each}
 					</div>
 				</div>
