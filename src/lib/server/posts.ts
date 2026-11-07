@@ -423,12 +423,13 @@ async function renderMarkdown(markdown: string): Promise<{
 			},
 			heading({ text, depth }) {
 				const id = uniqueHeadingId(usedIds, text);
+				const level = depth < 2 ? 2 : Math.min(depth, 6);
 
-				if (depth === 2 || depth === 3) {
-					toc.push({ id, text, depth });
+				if (level === 2 || level === 3) {
+					toc.push({ id, text, depth: level });
 				}
 
-				return `<h${depth} id="${escapeHtml(id)}">${escapeHtml(text)}</h${depth}>\n`;
+				return `<h${level} id="${escapeHtml(id)}">${escapeHtml(text)}</h${level}>\n`;
 			},
 			link(
 				this: { parser: { parseInline: (tokens: Token[]) => string } },

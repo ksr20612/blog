@@ -17,35 +17,35 @@
 	}
 </script>
 
-<section class="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-12">
-	<div class="flex flex-col gap-2">
+<div class="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-12">
+	<header class="flex flex-col gap-2">
 		<h1 class="font-serif text-2xl font-semibold tracking-normal sm:text-3xl leading-10">
 			<span class="text-primary">사람</span>을 먼저 생각하는 <br/> 조금 특이한 개발자의 기록<span class="text-primary">.</span>
 		</h1>
 		<p class="font-serif text-muted-foreground text-base leading-7 mb-4">
 			{site.description}
 		</p>
-	</div>
+	</header>
 
 	<Separator />
 
 	<div class="flex flex-col gap-16">
-		<div class="flex flex-col gap-6">
+		<section class="flex flex-col gap-6" aria-labelledby="recent-posts-heading">
 			<div class="flex items-end justify-between gap-4">
-				<h2 class="font-serif text-xl font-medium tracking-tight">최근 글<span class="text-primary">.</span></h2>
+				<h2 id="recent-posts-heading" class="font-serif text-xl font-medium tracking-tight">최근 글<span class="text-primary">.</span></h2>
 				<Button variant='ghost' color='secondary' href={resolve("/posts")}>전체 보기</Button>
 			</div>
 			<PostList posts={data.posts} />
-		</div>
+		</section>
 
 		{#each data.sections as section (section.id)}
 			{@const heading = splitTrailingPeriod(section.title)}
-			<div class="flex flex-col gap-6">
-				<h2 class="font-serif text-xl font-medium tracking-tight">
+			<section class="flex flex-col gap-6" aria-labelledby="{section.id}-heading">
+				<h2 id="{section.id}-heading" class="font-serif text-xl font-medium tracking-tight">
 					{heading.text}{#if heading.period}<span class="text-primary">.</span>{/if}
 				</h2>
 				<PostSectionList posts={section.posts} />
-			</div>
+			</section>
 		{/each}
 	</div>
-</section>
+</div>

@@ -10,7 +10,7 @@
 		<li>
 			<a
 				href={resolve("/posts/[slug]", { slug: post.slug })}
-				class="group flex items-baseline gap-4 py-3"
+				class="group flex items-baseline gap-4 rounded-sm py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
 			>
 				<time
 					datetime={post.date}
@@ -18,7 +18,11 @@
 				>
 					{post.date}
 				</time>
-				<span class="min-w-0 text-sm font-medium group-hover:underline">{post.title}</span>
+				<span
+					class="min-w-0 text-sm font-medium transition-colors group-hover:text-primary group-focus-visible:text-primary"
+				>
+					{post.title}
+				</span>
 			</a>
 		</li>
 	{/each}

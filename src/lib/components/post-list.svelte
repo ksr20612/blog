@@ -20,11 +20,13 @@
 		tags = [],
 		heading,
 		searchable = false,
+		cardHeadingLevel = 3,
 	}: {
 		posts: SearchableListPost[];
 		tags?: string[];
 		heading?: Snippet;
 		searchable?: boolean;
+		cardHeadingLevel?: 2 | 3;
 	} = $props();
 
 	const uid = $props.id();
@@ -504,7 +506,7 @@
 		<ul class="grid gap-4 sm:grid-cols-2">
 			{#each visibleItems as item (item.post.slug)}
 				<li in:cardEnter>
-					<PostCard post={item.post} snippet={item.snippet} />
+					<PostCard post={item.post} snippet={item.snippet} headingLevel={cardHeadingLevel} />
 				</li>
 			{/each}
 		</ul>

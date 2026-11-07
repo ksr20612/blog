@@ -6,14 +6,24 @@
 	import type { SearchSnippet } from "$lib/search";
 	import type { PostMeta } from "$lib/types";
 
-	let { post, snippet = null }: { post: PostMeta; snippet?: SearchSnippet | null } = $props();
+	let {
+		post,
+		snippet = null,
+		headingLevel = 3,
+	}: {
+		post: PostMeta;
+		snippet?: SearchSnippet | null;
+		headingLevel?: 2 | 3;
+	} = $props();
 </script>
 
 <a href={resolve("/posts/[slug]", { slug: post.slug })} class="block h-full">
 	<Card.Root class="h-full text-base ring-[#efeeeb] transition-all hover:ring-foreground/20">
 		<Card.Header class="gap-2.5">
 			<p class="text-muted-foreground text-xs">{formatDate(post.date)}</p>
-			<Card.Title class="text-foreground font-semibold leading-relaxed">{post.title}</Card.Title>
+			<Card.Title class="text-foreground font-semibold leading-relaxed">
+				<svelte:element this={`h${headingLevel}`}>{post.title}</svelte:element>
+			</Card.Title>
 			<Card.Description class="text-foreground/75 leading-relaxed">{post.description}</Card.Description>
 			{#if snippet}
 				<p class="text-muted-foreground line-clamp-2 text-sm leading-relaxed">

@@ -20,7 +20,9 @@
 <section class="mx-auto flex max-w-4xl px-4 py-16">
 	<Empty.Root class="border">
 		<Empty.Header>
-			<Empty.Title>{title}</Empty.Title>
+			<Empty.Title>
+				<h1>{title}</h1>
+			</Empty.Title>
 			<Empty.Description>{description}</Empty.Description>
 		</Empty.Header>
 		<Empty.Content>
