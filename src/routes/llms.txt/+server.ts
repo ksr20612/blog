@@ -35,7 +35,7 @@ export const GET: RequestHandler = () => {
 		"",
 		`- [Home](${canonicalUrl("/")}): 최근 글과 주제별 목록`,
 		`- [Posts](${canonicalUrl("/posts/")}): 작성한 글을 날짜순으로 모아 둔 목록입니다.`,
-		`- [Treads](${canonicalUrl("/treads/")}): 짧게 남긴 글과 이미지를 모아 둔 타임라인입니다.`,
+		`- [Threads](${canonicalUrl("/threads/")}): 짧게 남긴 글과 이미지를 모아 둔 타임라인입니다.`,
 		`- [RSS](${absoluteUrl("/rss.xml")}): 글 피드`,
 		"",
 	].join("\n");

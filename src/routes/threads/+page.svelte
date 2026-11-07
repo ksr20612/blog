@@ -9,7 +9,7 @@
 
 <section class="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-12">
 	<div class="flex flex-col gap-2">
-		<h1 class="text-2xl font-medium tracking-tight">Treads</h1>
+		<h1 class="text-2xl font-medium tracking-tight">Threads</h1>
 	</div>
 
 	{#if data.treads.length === 0}

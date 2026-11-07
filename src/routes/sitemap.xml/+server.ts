@@ -19,7 +19,7 @@ export const GET: RequestHandler = () => {
 	const urls = [
 		urlEntry("/"),
 		urlEntry("/posts/"),
-		urlEntry("/treads/"),
+		urlEntry("/threads/"),
 		...posts.map((post) => urlEntry(`/posts/${post.slug}/`, post.date)),
 	];
 

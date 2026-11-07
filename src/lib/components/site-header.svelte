@@ -16,7 +16,7 @@
 	const links = [
 		{ href: resolve("/"), label: "Home", route: "/" },
 		{ href: resolve("/posts"), label: "Posts", route: "/posts" },
-		{ href: resolve("/treads"), label: "Treads", route: "/treads" },
+		{ href: resolve("/threads"), label: "Threads", route: "/threads" },
 	] as const;
 
 	const titleDot = site.title.lastIndexOf(".");
