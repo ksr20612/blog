@@ -422,7 +422,7 @@
 				aria-label="태그 필터"
 				aria-orientation="horizontal"
 				aria-describedby={hintId}
-				class="rounded-lg has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/50"
+				class="rounded-lg has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring"
 				onkeydown={onTagToolbarKeydown}
 			>
 				<p id={hintId} class="sr-only">
@@ -454,7 +454,7 @@
 								aria-controls={resultsId}
 								class={cn(
 									badgeVariants({ variant: selected ? "default" : "secondary" }),
-									"cursor-pointer",
+									"cursor-pointer outline-none focus-visible:border-transparent focus-visible:ring-2 focus-visible:ring-ring",
 									selected
 										? "hover:bg-primary/80 active:bg-primary/80"
 										: "hover:bg-selection active:bg-selection",

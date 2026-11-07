@@ -74,7 +74,10 @@
 
 <header class="border-b bg-background/80 sticky top-0 z-40 backdrop-blur">
 	<div class="mx-auto flex h-12 max-w-4xl items-center justify-between gap-4 px-4">
-		<a href={resolve("/")} class="inline-flex items-center gap-1.5 font-medium tracking-tight">
+		<a
+			href={resolve("/")}
+			class="inline-flex items-center gap-1.5 rounded-md font-medium tracking-tight outline-none focus-visible:ring-2 focus-visible:ring-ring"
+		>
 			<img src={logo} alt="" width="16" height="16" class="size-4 shrink-0" />
 			<span>{titleHead}<span class="text-primary">.</span>{titleTail}</span>
 		</a>
