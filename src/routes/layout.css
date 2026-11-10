@@ -536,16 +536,49 @@
 	gap: 0.75rem;
 }
 
+.markdown-figure-row {
+	--figure-cols: 1;
+	display: grid;
+	width: fit-content;
+	max-width: 100%;
+	margin-inline: auto;
+	grid-template-columns: repeat(var(--figure-cols), minmax(0, max-content));
+	gap: 0.75rem;
+	align-items: start;
+	justify-content: center;
+}
+
+.markdown-figure-label,
 .markdown-figure-item {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 0.5rem;
+	min-width: 0;
+	max-width: 100%;
 	color: var(--muted-foreground);
 	font-size: 0.8125rem;
 	line-height: 1.5;
 	text-align: center;
+}
+
+.markdown-figure-label {
+	align-self: end;
+}
+
+.markdown-figure-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+@media (max-width: 640px) {
+	.markdown-figure-row:not([data-cols="1"]):not([data-cols="2"]) {
+		grid-template-columns: repeat(2, minmax(0, max-content));
+	}
+}
+
+@media (max-width: 420px) {
+	.markdown-figure-row:not([data-cols="1"]):not([data-cols="2"]) {
+		grid-template-columns: minmax(0, max-content);
+	}
 }
 
 .markdown-figure img {
