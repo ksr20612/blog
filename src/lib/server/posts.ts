@@ -13,7 +13,10 @@ import type {
 	TocItem,
 } from "$lib/types";
 import { extractNoteCallout } from "./markdown-notes";
-import { renderMarkdownTable } from "./markdown-tables";
+import {
+	normalizeMarkdownTableHeaders,
+	renderMarkdownTable,
+} from "./markdown-tables";
 
 type Frontmatter = {
 	title?: unknown;
@@ -500,7 +503,7 @@ async function renderMarkdown(markdown: string): Promise<{
 		},
 	});
 
-	const html = await marked.parse(markdown);
+	const html = await marked.parse(normalizeMarkdownTableHeaders(markdown));
 	return { html, toc };
 }
 
