@@ -79,7 +79,7 @@
 			class="inline-flex items-center gap-1.5 rounded-md font-medium tracking-tight outline-none focus-visible:ring-2 focus-visible:ring-ring"
 		>
 			<img src={logo} alt="" width="16" height="16" class="size-4 shrink-0" />
-			<span>{titleHead}<span class="text-primary">.</span>{titleTail}</span>
+			<span>{titleHead}<span class="text-primary">.{titleTail}</span></span>
 		</a>
 
 		<div class="hidden items-center gap-1 md:flex">
@@ -115,7 +115,7 @@
 				<Sheet.Content side="right" class="w-72">
 					<Sheet.Header>
 						<Sheet.Title>
-							{titleHead}<span class="text-primary">.</span>{titleTail}
+							{titleHead}<span class="text-primary">.{titleTail}</span>
 						</Sheet.Title>
 						<!-- <Sheet.Description>페이지로 이동</Sheet.Description> -->
 					</Sheet.Header>
