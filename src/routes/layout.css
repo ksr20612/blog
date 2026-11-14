@@ -655,3 +655,249 @@
 .markdown-table-wrap tbody tr:last-child td {
 	border-bottom: none;
 }
+
+.image-zoom-trigger {
+	position: relative;
+	display: block;
+	width: fit-content;
+	max-width: 100%;
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	line-height: 0;
+	cursor: zoom-in;
+}
+
+.image-zoom-trigger img {
+	display: block;
+	max-width: 100%;
+}
+
+.image-zoom-trigger:focus {
+	outline: none;
+}
+
+.image-zoom-trigger:focus-visible {
+	outline: 2px solid var(--ring);
+	outline-offset: 3px;
+}
+
+.image-zoom-icon {
+	position: absolute;
+	top: 0.45rem;
+	right: 0.45rem;
+	display: grid;
+	place-items: center;
+	width: 1.375rem;
+	height: 1.375rem;
+	border-radius: 999px;
+	background: oklch(0.18 0 0 / 78%);
+	color: white;
+	pointer-events: none;
+	opacity: 0.4;
+	transition: opacity 120ms ease;
+}
+
+.image-zoom-trigger:active .image-zoom-icon,
+.image-zoom-trigger:focus-visible .image-zoom-icon {
+	opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.image-zoom-icon {
+		opacity: 0;
+	}
+
+	.image-zoom-trigger:hover .image-zoom-icon,
+	.image-zoom-trigger:focus-visible .image-zoom-icon {
+		opacity: 1;
+	}
+}
+
+.image-zoom {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100dvh;
+	max-width: none;
+	max-height: none;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	background: transparent;
+	color: white;
+	color-scheme: dark;
+}
+
+.image-zoom::backdrop {
+	background: oklch(0.08 0 0 / 92%);
+}
+
+.image-zoom-stage {
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	overscroll-behavior: contain;
+	outline: none;
+	touch-action: pan-x pan-y;
+	scrollbar-gutter: stable;
+}
+
+.image-zoom-stage:focus-visible {
+	outline: 2px solid white;
+	outline-offset: -4px;
+}
+
+.image-zoom-frame {
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: max-content;
+	min-width: 100%;
+	min-height: 100%;
+	padding: calc(4.5rem + env(safe-area-inset-top))
+		calc(1rem + env(safe-area-inset-right))
+		calc(5rem + env(safe-area-inset-bottom))
+		calc(1rem + env(safe-area-inset-left));
+}
+
+.image-zoom-frame img {
+	display: block;
+	width: auto;
+	height: auto;
+	max-width: none;
+	max-height: none;
+	flex: none;
+	background: transparent;
+}
+
+.image-zoom-close {
+	position: absolute;
+	z-index: 1;
+	top: calc(0.75rem + env(safe-area-inset-top));
+	right: calc(0.75rem + env(safe-area-inset-right));
+	display: grid;
+	place-items: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	border: 0;
+	border-radius: 999px;
+	background: oklch(0.2 0 0 / 86%);
+	color: white;
+	cursor: pointer;
+}
+
+.image-zoom-close:hover {
+	background: oklch(0.32 0 0 / 94%);
+}
+
+.image-zoom-close:focus {
+	outline: none;
+}
+
+.image-zoom-close:focus-visible {
+	outline: 2px solid white;
+	outline-offset: 2px;
+}
+
+.image-zoom-toolbar {
+	position: absolute;
+	z-index: 1;
+	left: 50%;
+	bottom: calc(0.75rem + env(safe-area-inset-bottom));
+	transform: translateX(-50%);
+	display: flex;
+	gap: 0.35rem;
+	padding: 0.25rem;
+	border-radius: 999px;
+	background: oklch(0.16 0 0 / 82%);
+}
+
+.image-zoom-control {
+	display: grid;
+	place-items: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	border: 0;
+	border-radius: 999px;
+	background: transparent;
+	color: white;
+	cursor: pointer;
+}
+
+.image-zoom-control:hover {
+	background: oklch(1 0 0 / 12%);
+}
+
+.image-zoom-control:focus {
+	outline: none;
+}
+
+.image-zoom-control:focus-visible {
+	outline: 2px solid white;
+	outline-offset: 2px;
+}
+
+.image-zoom-control:disabled {
+	opacity: 0.35;
+	cursor: default;
+}
+
+html[data-image-zoom],
+html[data-image-zoom] body {
+	overflow: hidden;
+	overscroll-behavior: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.image-zoom[open] {
+		transition:
+			opacity 150ms ease,
+			overlay 150ms ease allow-discrete,
+			display 150ms ease allow-discrete;
+	}
+
+	@starting-style {
+		.image-zoom[open] {
+			opacity: 0;
+		}
+	}
+
+	.image-zoom[open]::backdrop {
+		transition:
+			opacity 150ms ease,
+			overlay 150ms ease allow-discrete,
+			display 150ms ease allow-discrete;
+	}
+
+	@starting-style {
+		.image-zoom[open]::backdrop {
+			opacity: 0;
+		}
+	}
+}
+
+@media (forced-colors: active) {
+	.image-zoom-trigger:focus-visible,
+	.image-zoom-close:focus-visible,
+	.image-zoom-control:focus-visible,
+	.image-zoom-stage:focus-visible {
+		outline: 2px solid CanvasText;
+	}
+
+	.image-zoom-close,
+	.image-zoom-toolbar,
+	.image-zoom-icon {
+		border: 1px solid CanvasText;
+		background: Canvas;
+		color: CanvasText;
+		box-shadow: none;
+		opacity: 1;
+	}
+}
