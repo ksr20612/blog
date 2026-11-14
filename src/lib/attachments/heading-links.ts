@@ -6,6 +6,19 @@ const linkPath =
 const checkPath =
 	"M9.9997 15.1709L19.1921 5.97852L20.6063 7.39273L9.9997 17.9993L3.63574 11.6354L5.04996 10.2212L9.9997 15.1709Z";
 
+function headingTitle(heading: HTMLHeadingElement) {
+	return heading.textContent?.replace(/\s+/g, " ").trim() ?? "";
+}
+
+function sectionLabel(title: string, copied: boolean) {
+	if (!title) {
+		return copied ? "이 섹션 주소를 복사했습니다" : "이 섹션 주소 복사";
+	}
+	return copied
+		? `${title}, 섹션 주소를 복사했습니다`
+		: `${title}, 섹션 주소 복사`;
+}
+
 function createIcon(path: string, name: "link" | "check") {
 	const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 	svg.setAttribute("viewBox", "0 0 24 24");
@@ -45,15 +58,16 @@ export const enhanceHeadingLinks: Attachment = (element) => {
 			continue;
 		}
 
+		const title = headingTitle(heading);
 		const button = document.createElement("button");
 		button.type = "button";
 		button.className = "heading-link";
-		button.setAttribute("aria-label", "이 섹션 주소 복사");
+		button.setAttribute("aria-label", sectionLabel(title, false));
 		button.append(createIcon(linkPath, "link"), createIcon(checkPath, "check"));
 
 		const reset = () => {
 			button.removeAttribute("data-copied");
-			button.setAttribute("aria-label", "이 섹션 주소 복사");
+			button.setAttribute("aria-label", sectionLabel(title, false));
 			if (status.dataset.owner === heading.id) {
 				status.textContent = "";
 				delete status.dataset.owner;
@@ -76,9 +90,10 @@ export const enhanceHeadingLinks: Attachment = (element) => {
 				`${url.pathname}${url.search}${url.hash}`,
 			);
 			button.dataset.copied = "true";
-			button.setAttribute("aria-label", "이 섹션 주소를 복사했습니다");
+			const copiedLabel = sectionLabel(title, true);
+			button.setAttribute("aria-label", copiedLabel);
 			status.dataset.owner = heading.id;
-			status.textContent = "이 섹션 주소를 복사했습니다.";
+			status.textContent = `${copiedLabel}.`;
 
 			const previous = timers.get(button);
 			if (previous) {

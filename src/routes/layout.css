@@ -360,15 +360,18 @@
 }
 
 @media (width < 86rem) {
-	.markdown-body .heading-block {
-		display: flex;
-		align-items: center;
-		gap: 0.4rem;
+	.markdown-body .heading-block :where(h2, h3) {
+		display: inline;
 	}
 
-	.markdown-body .heading-block :where(h2, h3) {
-		flex: 1;
-		min-width: 0;
+	.markdown-body .heading-block:has(h2) .heading-link {
+		font-size: 1.5em;
+		vertical-align: 0.08em;
+	}
+
+	.markdown-body .heading-block:has(h3) .heading-link {
+		font-size: 1.25em;
+		vertical-align: 0.02em;
 	}
 }
 
