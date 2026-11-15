@@ -360,6 +360,19 @@ function takeImageWidth(tokens: Token[], index: number) {
 	return Number(match[1]);
 }
 
+function isBlockquoteToken(token: Token): token is Tokens.Blockquote {
+	return token.type === "blockquote";
+}
+
+function markOpeningLead(tokens: Token[], leads: WeakSet<Tokens.Blockquote>) {
+	const first = tokens.find((token) => token.type !== "space");
+	if (!first || !isBlockquoteToken(first) || extractNoteCallout(first.tokens)) {
+		return;
+	}
+
+	leads.add(first);
+}
+
 function applyImageWidths(tokens: Token[]) {
 	for (let index = 0; index < tokens.length; index += 1) {
 		const token = tokens[index];
@@ -405,11 +418,13 @@ async function renderMarkdown(markdown: string): Promise<{
 	const highlighter = await getHighlighter();
 	const toc: TocItem[] = [];
 	const usedIds = new Map<string, number>();
+	const leadBlockquotes = new WeakSet<Tokens.Blockquote>();
 	const marked = new Marked({
 		gfm: true,
 		hooks: {
 			processAllTokens(tokens) {
 				applyImageWidths(tokens);
+				markOpeningLead(tokens, leadBlockquotes);
 				return tokens;
 			},
 		},
@@ -491,7 +506,12 @@ async function renderMarkdown(markdown: string): Promise<{
 			) {
 				const note = extractNoteCallout(token.tokens);
 				if (!note) {
-					return `<blockquote>\n${this.parser.parse(token.tokens)}</blockquote>\n`;
+					const body = this.parser.parse(token.tokens);
+					if (leadBlockquotes.has(token)) {
+						return `<div class="markdown-lead">\n${body}</div>\n`;
+					}
+
+					return `<blockquote>\n${body}</blockquote>\n`;
 				}
 
 				const title =

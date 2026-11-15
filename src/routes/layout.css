@@ -238,6 +238,31 @@
 	line-height: 1.45;
 }
 
+.markdown-body .markdown-lead {
+	margin: 0 0 2rem;
+	padding: 1rem 1.25rem 1.05rem;
+	border-radius: var(--radius-md);
+	background: color-mix(in oklab, var(--foreground) 6%, var(--background));
+	color: var(--foreground);
+	font-size: 0.975rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1.75;
+}
+
+.markdown-body .markdown-lead > :first-child {
+	margin-top: 0;
+}
+
+.markdown-body .markdown-lead > :last-child {
+	margin-bottom: 0;
+}
+
+.markdown-body .markdown-lead :where(p) {
+	margin-top: 0.7em;
+	margin-bottom: 0.7em;
+}
+
 .markdown-body a {
 	color: var(--primary);
 	text-decoration-color: color-mix(in oklab, var(--primary) 40%, transparent);
