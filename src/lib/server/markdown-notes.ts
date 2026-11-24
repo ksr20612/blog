@@ -1,6 +1,7 @@
 import type { Token, Tokens } from "marked";
 
 const noteMarker = /^\[!note\][ \t]*/i;
+const leadMarker = /^\[!lead\][ \t]*/i;
 const breakHtml = /^<br\s*\/?>$/i;
 
 function textToken(text: string): Tokens.Text {
@@ -28,6 +29,15 @@ function hasVisibleInline(tokens: Token[]) {
 
 		return token.type !== "space";
 	});
+}
+
+function inlineParagraph(tokens: Token[]): Tokens.Paragraph {
+	return {
+		type: "paragraph",
+		raw: tokens.map((token) => token.raw).join(""),
+		text: tokens.map((token) => ("text" in token ? token.text : "")).join(""),
+		tokens,
+	};
 }
 
 function splitNoteInline(
@@ -115,16 +125,39 @@ export function extractNoteCallout(
 
 	const body = tokens.slice(1);
 	if (hasVisibleInline(split.rest)) {
-		const paragraph: Tokens.Paragraph = {
-			type: "paragraph",
-			raw: split.rest.map((token) => token.raw).join(""),
-			text: split.rest
-				.map((token) => ("text" in token ? token.text : ""))
-				.join(""),
-			tokens: split.rest,
-		};
-		body.unshift(paragraph);
+		body.unshift(inlineParagraph(split.rest));
 	}
 
 	return { title: split.title, body };
+}
+
+export function extractLeadCallout(tokens: Token[]): Token[] | null {
+	const first = tokens[0];
+	if (first?.type !== "paragraph" || !first.tokens?.length) {
+		return null;
+	}
+
+	const [head, ...tail] = first.tokens;
+	if (head?.type !== "text") {
+		return null;
+	}
+
+	const match = head.text.match(leadMarker);
+	if (!match) {
+		return null;
+	}
+
+	const remainder = head.text.slice(match[0].length).replace(/^\n+/, "");
+	const inline: Token[] = [];
+	if (remainder.length > 0) {
+		inline.push(textToken(remainder));
+	}
+	inline.push(...tail);
+
+	const body = tokens.slice(1);
+	if (hasVisibleInline(inline)) {
+		body.unshift(inlineParagraph(inline));
+	}
+
+	return body;
 }
