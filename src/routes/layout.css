@@ -263,6 +263,11 @@
 	margin-bottom: 0.7em;
 }
 
+.markdown-body blockquote :where(p)::before,
+.markdown-body blockquote :where(p)::after {
+	content: none;
+}
+
 .markdown-body a {
 	color: var(--primary);
 	text-decoration-color: color-mix(in oklab, var(--primary) 40%, transparent);

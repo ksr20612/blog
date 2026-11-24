@@ -12,7 +12,7 @@ import type {
 	SearchablePost,
 	TocItem,
 } from "$lib/types";
-import { extractNoteCallout } from "./markdown-notes";
+import { extractLeadCallout, extractNoteCallout } from "./markdown-notes";
 import {
 	normalizeMarkdownTableHeaders,
 	renderMarkdownTable,
@@ -505,20 +505,28 @@ async function renderMarkdown(markdown: string): Promise<{
 				token: Tokens.Blockquote,
 			) {
 				const note = extractNoteCallout(token.tokens);
-				if (!note) {
-					const body = this.parser.parse(token.tokens);
-					if (leadBlockquotes.has(token)) {
-						return `<div class="markdown-lead">\n${body}</div>\n`;
-					}
+				if (note) {
+					const title =
+						note.title.length > 0
+							? this.parser.parseInline(note.title)
+							: "참고";
+					const body = this.parser.parse(note.body);
 
-					return `<blockquote>\n${body}</blockquote>\n`;
+					return `<aside class="markdown-note"><p class="markdown-note-title">${title}</p>\n${body}</aside>\n`;
 				}
 
-				const title =
-					note.title.length > 0 ? this.parser.parseInline(note.title) : "참고";
-				const body = this.parser.parse(note.body);
+				const lead = extractLeadCallout(token.tokens);
+				if (lead) {
+					const body = this.parser.parse(lead);
+					return `<div class="markdown-lead">\n${body}</div>\n`;
+				}
 
-				return `<aside class="markdown-note"><p class="markdown-note-title">${title}</p>\n${body}</aside>\n`;
+				const body = this.parser.parse(token.tokens);
+				if (leadBlockquotes.has(token)) {
+					return `<div class="markdown-lead">\n${body}</div>\n`;
+				}
+
+				return `<blockquote>\n${body}</blockquote>\n`;
 			},
 		},
 	});
