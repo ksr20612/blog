@@ -43,6 +43,7 @@ const HIGHLIGHT_LANGS = [
 	"html",
 	"markdown",
 	"python",
+	"dart",
 	"go",
 	"rust",
 	"yaml",

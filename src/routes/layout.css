@@ -473,6 +473,27 @@
 	rotate: 0deg;
 }
 
+.markdown-body :where(code):not(pre code) {
+	padding: 0.12em 0.35em;
+	border-radius: 0.25em;
+	background: color-mix(in oklab, var(--foreground) 8%, var(--background));
+	color: var(--foreground);
+	font-family:
+		ui-monospace, SFMono-Regular, Menlo, Consolas, "Pretendard Variable",
+		monospace;
+	font-size: 0.875em;
+	font-weight: 500;
+	font-style: normal;
+	line-height: 1.4;
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+}
+
+.markdown-body :where(code):not(pre code)::before,
+.markdown-body :where(code):not(pre code)::after {
+	content: none;
+}
+
 .markdown-body :where(pre.shiki) {
 	background-color: var(--muted);
 	color: var(--shiki-light);
@@ -643,14 +664,6 @@
 	color: var(--primary);
 	text-decoration: underline;
 	text-underline-offset: 0.18em;
-}
-
-.markdown-figure code,
-.markdown-table-wrap code {
-	font-size: 0.875em;
-	padding: 0.1em 0.35em;
-	border-radius: calc(var(--radius) * 0.5);
-	background: var(--muted);
 }
 
 .markdown-table-wrap {
